@@ -1,0 +1,25 @@
+<p align="center">
+  <img src="images/kachi-button-text.png" alt="Kachi Button" width="480">
+</p>
+
+<p align="center"><strong>Click once. Type the whole thing.</strong></p>
+
+Kachi Button is a tiny programmable USB keyboard designed to turn your favorite words and shortcuts into physical buttons. “Kachi” is the Japanese sound of a click.
+
+![Kachi Button product concept](images/kachi-button-product.png)
+
+The product concept combines three mechanical keys, a USB-C connection, and a compact enclosure. Use cases include quick game chat messages and recurring prompts such as “OK,” “Continue,” and “Do it.” The image above is a design reference, not a photograph of a validated production unit.
+
+## Hardware v1
+
+The first PCB uses a WCH CH552E, three MX-compatible switches, a USB-C connector, and a status LED. One large key sits above two smaller keys. The two-layer board has R5 corners and is intended for a snap-fit enclosure. All resistors and capacitors use 0402 packages.
+
+Manufacturing exports are available in [pcb/v1](pcb/v1/README.md), including Gerber, BOM, pick-and-place, and STEP files. The design record explains the circuit, component choices, layout, and outstanding validation.
+
+USB keyboard firmware and a browser-based configuration tool are planned. This release records the hardware design and manufacturing exports; it does not establish successful hardware bring-up, firmware operation, or enclosure fit.
+
+## Development
+
+PCB and schematic work uses the EasyEDA MCP / `easyeda-api` skill workflow. See [PCB development with EasyEDA](docs/pcb-development.md) for connection setup, editing practices, verification, and export steps.
+
+Chat with contributors in Japanese. Write documentation, code, code comments, issues, and pull requests in English, as specified in [AGENTS.md](AGENTS.md).
