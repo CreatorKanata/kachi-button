@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/kachi-button-text.png" alt="Kachi Button" width="480">
+  <img src="images/logo/kachi-button-text-white-background.png" alt="Kachi Button" width="480">
 </p>
 
 <p align="center"><strong>Click once. Type the whole thing.</strong></p>
