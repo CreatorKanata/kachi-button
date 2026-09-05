@@ -22,12 +22,14 @@ These previews show component footprints, routing, test-pad labels, and silkscre
 
 ## Release files
 
+Manufacturing and assembly files are grouped in `gerber/`, the STEP model in `board-3d-data/`, and board previews in `images/`.
+
 | File | Purpose |
 | --- | --- |
-| [Gerber_PCB1_2026-09-05.zip](Gerber_PCB1_2026-09-05.zip) | Copper, silkscreen, solder mask, top paste, board outline, and drill data |
-| [BOM_Board1_Schematic1_2026-09-05.xlsx](BOM_Board1_Schematic1_2026-09-05.xlsx) | Nine part types, thirteen components, with LCSC part numbers |
-| [PickAndPlace_PCB1_2026-09-05.xlsx](PickAndPlace_PCB1_2026-09-05.xlsx) | Thirteen component positions in millimeters, rotations, and mounting-side information |
-| [3D_PCB1_2026-09-05.step](3D_PCB1_2026-09-05.step) | STEP assembly for mechanical review |
+| [Gerber_PCB1_2026-09-05.zip](gerber/Gerber_PCB1_2026-09-05.zip) | Copper, silkscreen, solder mask, top paste, board outline, and drill data |
+| [BOM_Board1_Schematic1_2026-09-05.xlsx](gerber/BOM_Board1_Schematic1_2026-09-05.xlsx) | Nine part types, thirteen components, with LCSC part numbers |
+| [PickAndPlace_PCB1_2026-09-05.xlsx](gerber/PickAndPlace_PCB1_2026-09-05.xlsx) | Thirteen component positions in millimeters, rotations, and mounting-side information |
+| [3D_PCB1_2026-09-05.step](board-3d-data/3D_PCB1_2026-09-05.step) | STEP assembly for mechanical review |
 
 The Gerber and placement exports are timestamped 19:38 on September 5; the STEP header is timestamped 21:15. These are the files supplied for this release. Their common origin in an identical saved EasyEDA revision has not been independently established. Native editable EasyEDA project files are not included in this directory.
 
