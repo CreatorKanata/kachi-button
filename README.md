@@ -6,7 +6,7 @@
 
 Kachi Button is a tiny programmable USB keyboard designed to turn your favorite words and shortcuts into physical buttons. “Kachi” is the Japanese sound of a click.
 
-![Kachi Button product concept](images/kachi-button-product.png)
+![Kachi Button product reference](images/kachi-button-product2.png)
 
 The product concept combines three mechanical keys, a USB-C connection, and a compact enclosure. Use cases include quick game chat messages and recurring prompts such as “OK,” “Continue,” and “Do it.” The image above is a design reference, not a photograph of a validated production unit.
 
@@ -23,6 +23,8 @@ Manufacturing exports are available in [pcb/v1](pcb/v1/README.md), including Ger
 USB keyboard firmware and a browser-based configuration tool are planned. This release records the hardware design and manufacturing exports; it does not establish successful hardware bring-up, firmware operation, or enclosure fit.
 
 ## Development
+
+See the [detailed specifications](docs/README.md) for product requirements, PCB dimensions and placement, firmware, and the enclosure to be designed in 3D CAD. The latest reference fixes keycap sizes at 35 × 18 mm for the upper key and 25 × 18 mm for each lower key; enclosure dimensions remain provisional. The purchased USB-C cable is nominally 10 cm long.
 
 PCB and schematic work uses the EasyEDA MCP / `easyeda-api` skill workflow. See [PCB development with EasyEDA](docs/pcb-development.md) for connection setup, editing practices, verification, and export steps.
 
