@@ -4,7 +4,7 @@ Status: design requirements, September 6, 2026. The enclosure must be designed i
 
 ## Appearance and fixed keycap dimensions
 
-![Latest product and keycap reference](../images/kachi-button-product2.png)
+![Latest product and keycap reference](../../images/kachi-button-product2.png)
 
 Use the latest reference for the rounded white body, visible key arrangement, logo beside the upper key, and a cable loop on the right. Use the redesigned logo assets; visual renderings do not define hidden construction details.
 
@@ -25,7 +25,7 @@ Specify case-body height and overall height including keycaps separately. Do not
 
 ## CAD inputs and datums
 
-Import the [v1 STEP assembly](../pcb/v1/board-3d-data/3D_PCB1_2026-09-05.step) and align it with the [Gerber outline/drills](../pcb/v1/gerber/Gerber_PCB1_2026-09-05.zip). Use the [PCB placement table](pcb-spec.md) as a cross-check. STEP export and manufacturing data have different timestamps; verify their agreement before using them as mating geometry.
+Import the [v1 STEP assembly](../../pcb/v1/board-3d-data/3D_PCB1_2026-09-05.step) and align it with the [Gerber outline/drills](../../pcb/v1/gerber/Gerber_PCB1_2026-09-05.zip). Use the [PCB placement table](pcb-spec.md) as a cross-check. STEP export and manufacturing data have different timestamps; verify their agreement before using them as mating geometry.
 
 Use millimeters and a documented board-to-case coordinate transform. Define the board top surface as the case assembly's Z datum, with the nominal 1.6 mm board extending below it. Validate that interpretation against the imported model rather than assuming the STEP origin or axis directions.
 

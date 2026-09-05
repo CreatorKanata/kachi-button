@@ -4,12 +4,14 @@ Updated September 6, 2026. These English specifications consolidate the prelimin
 
 | Document | Scope |
 | --- | --- |
-| [Product](product-spec.md) | Purpose, experience, scope, purchased cable, and delivery milestones |
-| [PCB](pcb-spec.md) | Electrical interfaces, dimensions, placement coordinates, manufacturing, and checks |
-| [Firmware and configuration](firmware-spec.md) | Key behavior, USB HID, WebHID, storage, and acceptance criteria |
-| [Enclosure](enclosure-spec.md) | Parametric 3D CAD, confirmed keycap sizes, board retention, and cable storage |
+| [Product](spec/product-spec.md) | Purpose, experience, scope, purchased cable, and delivery milestones |
+| [PCB](spec/pcb-spec.md) | Electrical interfaces, dimensions, placement coordinates, manufacturing, and checks |
+| [Firmware and configuration](spec/firmware-spec.md) | Key behavior, USB HID, WebHID, storage, and acceptance criteria |
+| [Enclosure](spec/enclosure-spec.md) | Parametric 3D CAD, confirmed keycap sizes, board retention, and cable storage |
 | [PCB development](pcb-development.md) | EasyEDA MCP / `easyeda-api` skill workflow |
 | [PCB v1 release](../pcb/v1/README.md) | Version-specific design history, previews, and manufacturing files |
+
+Specifications live in `docs/spec/`; development workflows remain directly under `docs/`.
 
 ## Authority and status
 

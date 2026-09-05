@@ -1,6 +1,6 @@
 # Product Specification
 
-Status: requirements baseline, September 6, 2026. See [the specification index](README.md) for authority and unresolved decisions.
+Status: requirements baseline, September 6, 2026. See [the specification index](../README.md) for authority and unresolved decisions.
 
 ## Purpose and appearance
 
@@ -8,7 +8,7 @@ Kachi Button is a compact programmable USB keyboard that turns frequently used w
 
 The core message is: **Click once. Type the whole thing.**
 
-![Latest Kachi Button product reference](../images/kachi-button-product2.png)
+![Latest Kachi Button product reference](../../images/kachi-button-product2.png)
 
 This is the latest appearance reference. It shows a rounded white enclosure, an orange upper key, blue and yellow lower keys, a logo beside the upper key, and a short cable loop on the right. Colors and printed legends are a presentation baseline; key mappings remain configurable.
 
@@ -57,7 +57,7 @@ Windows, macOS, and Linux are keyboard compatibility targets. Android keyboard u
 
 The user purchased a **nominal 10 cm USB-C male-to-USB-C male cable**, reported September 6, 2026. The supplied reference shows a white cable, straight male plugs with white molded bodies, and a flexible section bent into a U. This replaces the original 15–20 cm cable concept.
 
-![Purchased cable appearance reference](images/usb-c-cable-10cm-reference.png)
+![Purchased cable appearance reference](../images/usb-c-cable-10cm-reference.png)
 
 The image is a user-supplied appearance reference, not a dimensional drawing or an electrical datasheet. Manufacturer, SKU, whether the stated length includes the plugs, data capability, overmold dimensions, and bend radius are not yet verified.
 
