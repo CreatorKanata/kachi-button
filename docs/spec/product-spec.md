@@ -12,7 +12,7 @@ The core message is: **Click once. Type the whole thing.**
 
 This is the latest appearance reference. It shows a rounded white enclosure, an orange upper key, blue and yellow lower keys, a logo beside the upper key, and a short cable loop on the right. Colors and printed legends are a presentation baseline; key mappings remain configurable.
 
-The user confirmed the keycap dimensions shown in this image: upper 35 × 18 mm and lower two each 25 × 18 mm. The pictured enclosure dimensions are provisional. See [the enclosure specification](enclosure-spec.md) for the resulting fit constraints.
+The latest user decision supersedes the upper key width in this image: upper 33 × 18 mm and lower two each 25 × 18 mm. The pictured enclosure dimensions are provisional. See [the enclosure specification](enclosure-spec.md) for the resulting fit constraints.
 
 Use the redesigned assets under `images/logo/` and the editable `images/kachi-button.sketch` source. The repository's main README uses `kachi-button-text-white-background.png` as its header logo. Preserve the existing PCB artwork separately from enclosure branding.
 

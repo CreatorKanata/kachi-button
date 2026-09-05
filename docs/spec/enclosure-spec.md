@@ -10,14 +10,16 @@ Use the latest reference for the rounded white body, visible key arrangement, lo
 
 | Feature | Dimension / decision | Status |
 | --- | --- | --- |
-| Upper keycap | 35 × 18 mm in plan view | Confirmed by user |
+| Upper keycap | 33 × 18 mm in plan view | Confirmed by user |
 | Lower-left keycap | 25 × 18 mm in plan view | Confirmed by user |
 | Lower-right keycap | 25 × 18 mm in plan view | Confirmed by user |
 | Pictured enclosure | 62 × 36 × 18 mm | Provisional visual target only |
 | Purchased cable | Nominal 10 cm, USB-C male to male | Confirmed purchase; detailed dimensions TBD |
 | PCB retention | Snap fits, no corner PCB screws | Confirmed |
 
-Do not substitute standard “2U / 1U” dimensions for the confirmed keycap sizes. Record which physical keycap edges define the stated dimensions before machining close-fitting openings; cap height, skirt profile, stem location, underside cavity, and travel envelope still need measurement.
+The upper width is revised from 35 mm to 33 mm (25 + 4 × 2). All three keycaps are 10 mm high. The central underside stem boss must be 7 mm in outer diameter, increased from 6 mm, while retaining the 1.5 mm print-clearance cross slot. White SVG lettering remains a separate 0.4 mm-thick body set. Physical switch fit and print tolerances still require testing.
+
+Do not substitute standard “2U / 1U” dimensions for the confirmed keycap sizes. Record which physical keycap edges define the stated dimensions before machining close-fitting openings; skirt profile, stem location, underside cavity, and travel envelope still need measurement.
 
 The two 18 mm keycap rows already require 36 mm before any gap or surrounding wall. The existing PCB is also approximately 41 mm high. Therefore, the pictured 36 mm external enclosure dimension cannot contain the current board and intended keys. Keep the keycap dimensions and PCB geometry fixed; derive a larger case envelope in CAD. The 62 mm width and 18 mm height also remain unverified, particularly with full-height switch bodies and protruding keycaps.
 
@@ -43,7 +45,7 @@ The rendered underside circles may represent feet; they are not permission to ad
 
 ## Key openings and motion
 
-Locate openings from the actual switch stems and the confirmed keycaps. Verify the upper 35 × 18 mm cap's orientation and stem offset rather than copying the visual center. Preserve the v1 switch placement unless a PCB revision is explicitly approved.
+Locate openings from the actual switch stems and the confirmed keycaps. Verify the upper 33 × 18 mm cap's orientation and stem offset rather than copying the visual center. Preserve the v1 switch placement unless a PCB revision is explicitly approved.
 
 Model each key at rest and at full depression, including skirt motion and tolerances. Allow clearance between adjacent keys and between keys and walls throughout travel. Check off-center presses on the wide cap. Determine whether the selected cap/switch combination requires stabilization; no stabilizer interface is assumed present in v1.
 

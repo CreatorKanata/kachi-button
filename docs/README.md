@@ -26,7 +26,7 @@ The ignored `docs/concept/` directory contains the original planning input. Thes
 | Topic | Current baseline |
 | --- | --- |
 | Key arrangement | One upper wide key, two lower keys |
-| Keycap size | Confirmed: upper 35 × 18 mm; lower two each 25 × 18 mm |
+| Keycap size | Confirmed: upper 33 × 18 mm; lower two each 25 × 18 mm |
 | Product reference | `images/kachi-button-product2.png` is the latest appearance reference |
 | Enclosure size | 62 × 36 × 18 mm in the image is provisional, not a manufacturing requirement |
 | PCB | Existing v1, approximately 55 × 41 mm, four R5 corners, two copper layers |

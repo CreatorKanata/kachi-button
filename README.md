@@ -24,7 +24,7 @@ USB keyboard firmware and a browser-based configuration tool are planned. This r
 
 ## Development
 
-See the [detailed specifications](docs/README.md) for product requirements, PCB dimensions and placement, firmware, and the enclosure to be designed in 3D CAD. The latest reference fixes keycap sizes at 35 × 18 mm for the upper key and 25 × 18 mm for each lower key; enclosure dimensions remain provisional. The purchased USB-C cable is nominally 10 cm long.
+See the [detailed specifications](docs/README.md) for product requirements, PCB dimensions and placement, firmware, and the enclosure to be designed in 3D CAD. The latest design decisions fix keycap sizes at 33 × 18 mm for the upper key and 25 × 18 mm for each lower key; enclosure dimensions remain provisional. The purchased USB-C cable is nominally 10 cm long.
 
 PCB and schematic work uses the EasyEDA MCP / `easyeda-api` skill workflow. See [PCB development with EasyEDA](docs/pcb-development.md) for connection setup, editing practices, verification, and export steps.
 
