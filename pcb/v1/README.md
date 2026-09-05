@@ -4,6 +4,22 @@ Design record: September 5, 2026.
 
 This directory contains the first hardware manufacturing export set. The product image and the user's final mechanical placement took priority over the preliminary AI-generated concept specification. In particular, v1 uses one upper large key and two lower small keys, rather than three keys in a horizontal row.
 
+## Board previews
+
+### 3D assembly
+
+![Kachi Button v1 PCB 3D rendering](images/v1-3d-board.png)
+
+The 3D rendering shows the switches and electronics without keycaps or an enclosure.
+
+### Top and bottom
+
+| Top | Bottom |
+| --- | --- |
+| ![Kachi Button v1 top board preview](images/v1-top.png) | ![Kachi Button v1 bottom board preview](images/v1-bottom.png) |
+
+These previews show component footprints, routing, test-pad labels, and silkscreen artwork. Click an image to inspect it at full size. Preview colors differ between views; fabrication settings determine the manufactured solder-mask color.
+
 ## Release files
 
 | File | Purpose |

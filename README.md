@@ -14,6 +14,10 @@ The product concept combines three mechanical keys, a USB-C connection, and a co
 
 The first PCB uses a WCH CH552E, three MX-compatible switches, a USB-C connector, and a status LED. One large key sits above two smaller keys. The two-layer board has R5 corners and is intended for a snap-fit enclosure. All resistors and capacitors use 0402 packages.
 
+![Kachi Button v1 PCB 3D rendering](pcb/v1/images/v1-3d-board.png)
+
+See the [top and bottom board previews](pcb/v1/README.md#board-previews) for routing and silkscreen details.
+
 Manufacturing exports are available in [pcb/v1](pcb/v1/README.md), including Gerber, BOM, pick-and-place, and STEP files. The design record explains the circuit, component choices, layout, and outstanding validation.
 
 USB keyboard firmware and a browser-based configuration tool are planned. This release records the hardware design and manufacturing exports; it does not establish successful hardware bring-up, firmware operation, or enclosure fit.
