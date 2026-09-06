@@ -19,6 +19,8 @@ Use the latest reference for the rounded white body, visible key arrangement, lo
 
 The upper width is revised from 35 mm to 33 mm (25 + 4 × 2). All three keycaps are 10 mm high. The central underside stem boss must be 7 mm in outer diameter, increased from 6 mm, while retaining the 1.5 mm print-clearance cross slot. White SVG lettering remains a separate 0.4 mm-thick body set. Physical switch fit and print tolerances still require testing.
 
+The current lettered Fusion models use the updated path artwork from `images/key-top/kety-top-go-go.svg`, `key-top-hi.svg`, and `key-top-thx.svg`. The upper model is now named `KachiButton-Keycap-Go-go-33x18x10`. The SVG paths, including punctuation and capitalization, define the printed legends; stale SVG title metadata does not. Lettering is centered and remains a separate white 0.4 mm inlay. The two blank samples remain unchanged.
+
 Two blank print samples are saved in the Fusion `kachi-button` folder: `KachiButton-Keycap-Sample-Blank-33x18x10` and `KachiButton-Keycap-Sample-Blank-25x18x10`. Each is a single solid with no lettering or lettering recess, retaining the 7 mm stem boss and existing cross-slot clearance. Both models passed dimension and feature-health checks; physical print fit remains untested.
 
 Do not substitute standard “2U / 1U” dimensions for the confirmed keycap sizes. Record which physical keycap edges define the stated dimensions before machining close-fitting openings; skirt profile, stem location, underside cavity, and travel envelope still need measurement.
