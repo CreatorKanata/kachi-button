@@ -83,7 +83,7 @@ The CH552E is the single controller for the three direct switch inputs, USB keyb
 
 All three positions use the same CPG151101D13 switch: SW1 is the upper button, SW2 is lower left, and SW3 is lower right. They use MX-compatible cross stems and are soldered through the PCB. The BOM's footprint is named `KEY-TH_CPG151101D21X`; this is the library footprint identifier, not a substitute ordering part number. Check the actual CPG151101D13 against that footprint and the 3D model before assembly.
 
-The keycaps are separate custom parts, not included in this electronic BOM. Their confirmed external sizes are 33 × 18 × 10 mm for the upper key and 25 × 18 × 10 mm for each lower key. A nominal 1.3 mm switch cross thickness was supplied by the user; the current printed keycap prototype uses a 1.5 mm cross-slot width for clearance. Verify fit with the actual switch and printing process rather than treating that clearance as a switch datasheet dimension.
+The keycaps are separate custom parts, not included in this electronic BOM. Their confirmed external sizes are 33 × 18 × 10 mm for the upper key and 25 × 18 × 10 mm for each lower key. A nominal 1.3 mm switch cross thickness was supplied by the user; the revised keycap CAD uses a 1.35 mm cross-slot width and 4.25 mm span after the previous 1.5 mm slot proved loose. The stem boss is restored to 6 mm outside diameter. See the [keycap fit revision](../../3d-models/KEYCAP-FIT.md). Verify fit with the actual switch and printing process rather than treating that clearance as a switch datasheet dimension.
 
 ### Connector, indicator, and protection
 

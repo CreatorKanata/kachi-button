@@ -17,11 +17,11 @@ Use the latest reference for the rounded white body, visible key arrangement, lo
 | Purchased cable | Nominal 10 cm, USB-C male to male | Confirmed purchase; detailed dimensions TBD |
 | PCB retention | Snap fits, no corner PCB screws | Confirmed |
 
-The upper width is revised from 35 mm to 33 mm (25 + 4 × 2). All three keycaps are 10 mm high. The central underside stem boss must be 7 mm in outer diameter, increased from 6 mm, while retaining the 1.5 mm print-clearance cross slot. White SVG lettering remains a separate 0.4 mm-thick body set. Physical switch fit and print tolerances still require testing.
+The upper width is revised from 35 mm to 33 mm (25 + 4 × 2). All three keycaps are 10 mm high. The central underside stem boss is restored to 6 mm in outer diameter after the 7 mm version interfered with the switch. The cross socket is reduced from 1.5 mm to 1.35 mm arm width, with a 4.25 mm span and 4.5 mm blind depth, following loose-fit feedback. See the [fit revision and source comparisons](../../3d-models/KEYCAP-FIT.md). White SVG lettering remains a separate 0.4 mm-thick body set. Physical switch fit and print tolerances still require testing.
 
-The current lettered Fusion models use the updated path artwork from `images/key-top/kety-top-go-go.svg`, `key-top-hi.svg`, and `key-top-thx.svg`. The upper model is now named `KachiButton-Keycap-Go-go-33x18x10`. The SVG paths, including punctuation and capitalization, define the printed legends; stale SVG title metadata does not. Lettering is centered and remains a separate white 0.4 mm inlay. The two blank samples remain unchanged.
+The current lettered Fusion models use the updated path artwork from `images/key-top/kety-top-go-go.svg`, `key-top-hi.svg`, and `key-top-thx.svg`. The upper model is now named `KachiButton-Keycap-Go-go-33x18x10`. The SVG paths, including punctuation and capitalization, define the printed legends; stale SVG title metadata does not. Lettering is centered and remains a separate white 0.4 mm inlay. The two blank samples use the same revised stem boss and socket dimensions.
 
-Two blank print samples are saved in the Fusion `kachi-button` folder: `KachiButton-Keycap-Sample-Blank-33x18x10` and `KachiButton-Keycap-Sample-Blank-25x18x10`. Each is a single solid with no lettering or lettering recess, retaining the 7 mm stem boss and existing cross-slot clearance. Both models passed dimension and feature-health checks; physical print fit remains untested.
+Two blank print samples are saved in the Fusion `kachi-button` folder: `KachiButton-Keycap-Sample-Blank-33x18x10` and `KachiButton-Keycap-Sample-Blank-25x18x10`. Each is a single solid with no lettering or lettering recess, using the revised 6 mm stem boss and 1.35 × 4.25 mm cross socket. Both models passed dimension and feature-health checks; physical print fit remains untested.
 
 Do not substitute standard “2U / 1U” dimensions for the confirmed keycap sizes. Record which physical keycap edges define the stated dimensions before machining close-fitting openings; skirt profile, stem location, underside cavity, and travel envelope still need measurement.
 
@@ -39,7 +39,7 @@ Measure actual switches, keycaps, plug bodies, strain relief, and assembled unde
 
 ## Construction and retention
 
-Current prototype architecture: Top is a box with internal latch pockets; Bottom is a plate with lateral flexure latches entirely below the PCB. Bottom supports and straight Top stops retain the PCB without hooks above the board or screws. The compact footprint is 62.9 × 45.0 mm; the 22.05 mm case height excludes the protruding keycaps. The top surface is 3 mm above the keycap lower edges. Top has R2.5 outer edge rounding and the plan outline has R6 corners.
+Current prototype architecture: Top is a box with internal latch pockets; Bottom is a plate with lateral flexure latches entirely below the PCB. Two broad front wedges on lateral springs and two fixed rear tabs engage Top pockets below the PCB. Bottom supports and five 3 mm-wide Top ribs extending continuously to the side walls retain the PCB without hooks above the board or screws. A 4 × 5 mm Bottom pad supports the PCB directly beneath J1. A fifth Bottom support, 3 × 2.4 mm at board X48–51 and Y37.8–40.2 mm, pairs with a rear-wall Top rib to retain the previously unsupported rear-right corner. Assemble the case with keycaps removed; the angled assembly path and PLA latch life require physical testing. The compact footprint is 63.3 × 47.2 mm; the 23.25 mm case height excludes the protruding keycaps. The top surface is 3 mm above the keycap lower edges. Top has R2.5 outer edge rounding and the plan outline has R6 corners.
 
 Support the PCB where pressing keys and inserting the cable load it. Place supports on verified free regions and keep them away from exposed pads, solder joints, traces, switch pins, and connector anchor protrusions. A Bottom face without mounted components still needs clearance for through-hole leads and solder fillets.
 
@@ -107,3 +107,11 @@ Deliver editable CAD source, a parameter table, STEP solids/assembly, STL or 3MF
 | Dimensional release | Final body and overall dimensions replace provisional image dimensions in drawings |
 
 Record test conditions and results, not just “fits.” Repeated snap/parking cycles, drop/handling criteria, and acceptable forces must be defined before a production release; they are not validated by the v1 board preview.
+
+## FDM structural revision
+
+The current enclosure uses 2 mm rear tab roots and tabs, 2 mm front latch shoulders, and 10 mm-long springs with a 2 × 2 mm cross section. Pocket lower lips are 1.5 mm front and 1.7 mm rear. The nominal roof is 2.4 mm, retaining 2 mm beneath the logo inlays. USB surrounding walls are 2 mm; the blind parking depth is reduced to 3.75 mm. Right-side Top stops are retracted 0.7 mm toward the wall for additional key clearance. See the prototype record for geometry checks and the outstanding printed snap-fit evaluation.
+
+Bottom PCB support posts have a minimum nominal thickness of 2.4 mm: three 2.4 × 3 mm posts, one 3 × 2.4 mm corner post, and the 4 × 5 mm USB support. Their height remains 4.7 mm.
+
+The latest wall requirement is 1.5 mm for ordinary side walls and 2 mm for the Bottom plate. Snap receiver regions retain local reinforcement; the roof, USB regions, and PCB support thicknesses remain as recorded above.

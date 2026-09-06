@@ -1,0 +1,77 @@
+[
+  {
+    "name": "KachiButton-Keycap-Go-go-33x18x10",
+    "dimensions_mm": [
+      33.0,
+      18.0,
+      10.0
+    ],
+    "bodies": 7,
+    "boss_diameter_mm": 6,
+    "socket_width_mm": 1.35,
+    "socket_span_mm": 4.25,
+    "socket_depth_mm": 4.5,
+    "solid_boundary_tests": 31,
+    "healthy": true
+  },
+  {
+    "name": "KachiButton-Keycap-Hi-25x18x10",
+    "dimensions_mm": [
+      25.0,
+      18.0,
+      10.0
+    ],
+    "bodies": 6,
+    "boss_diameter_mm": 6,
+    "socket_width_mm": 1.35,
+    "socket_span_mm": 4.25,
+    "socket_depth_mm": 4.5,
+    "solid_boundary_tests": 31,
+    "healthy": true
+  },
+  {
+    "name": "KachiButton-Keycap-Thx-25x18x10",
+    "dimensions_mm": [
+      25.0,
+      18.0,
+      10.0
+    ],
+    "bodies": 4,
+    "boss_diameter_mm": 6,
+    "socket_width_mm": 1.35,
+    "socket_span_mm": 4.25,
+    "socket_depth_mm": 4.5,
+    "solid_boundary_tests": 31,
+    "healthy": true
+  },
+  {
+    "name": "KachiButton-Keycap-Sample-Blank-33x18x10",
+    "dimensions_mm": [
+      33.0,
+      18.0,
+      10.0
+    ],
+    "bodies": 1,
+    "boss_diameter_mm": 6,
+    "socket_width_mm": 1.35,
+    "socket_span_mm": 4.25,
+    "socket_depth_mm": 4.5,
+    "solid_boundary_tests": 31,
+    "healthy": true
+  },
+  {
+    "name": "KachiButton-Keycap-Sample-Blank-25x18x10",
+    "dimensions_mm": [
+      25.0,
+      18.0,
+      10.0
+    ],
+    "bodies": 1,
+    "boss_diameter_mm": 6,
+    "socket_width_mm": 1.35,
+    "socket_span_mm": 4.25,
+    "socket_depth_mm": 4.5,
+    "solid_boundary_tests": 31,
+    "healthy": true
+  }
+]
