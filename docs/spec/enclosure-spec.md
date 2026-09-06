@@ -1,6 +1,6 @@
 # Enclosure and 3D CAD Specification
 
-Status: design requirements, September 6, 2026. The enclosure must be designed in **parametric 3D CAD** and validated with physical prototypes. No finished enclosure model or validated fit is established by the current PCB release.
+Status: design requirements, September 6, 2026. The enclosure must be designed in **parametric 3D CAD** and validated with physical prototypes. A Fusion PLA prototype now exists; physical fit remains unvalidated. See the [prototype design record and exports](../../3d-models/enclosure-pla-v1/README.md) for the current geometry and printing notes.
 
 ## Appearance and fixed keycap dimensions
 
@@ -39,7 +39,7 @@ Measure actual switches, keycaps, plug bodies, strain relief, and assembled unde
 
 ## Construction and retention
 
-Proposed architecture: a lower tray with board support ledges and snap retention, plus an upper frame around the key openings. Part split and fastening between enclosure pieces are CAD decisions, but PCB retention must use snap fits rather than introducing four corner board holes.
+Current prototype architecture: Top is a box with internal latch pockets; Bottom is a plate with lateral flexure latches entirely below the PCB. Bottom supports and straight Top stops retain the PCB without hooks above the board or screws. The compact footprint is 62.9 × 45.0 mm; the 22.05 mm case height excludes the protruding keycaps. The top surface is 3 mm above the keycap lower edges. Top has R2.5 outer edge rounding and the plan outline has R6 corners.
 
 Support the PCB where pressing keys and inserting the cable load it. Place supports on verified free regions and keep them away from exposed pads, solder joints, traces, switch pins, and connector anchor protrusions. A Bottom face without mounted components still needs clearance for through-hole leads and solder fillets.
 
@@ -89,7 +89,7 @@ Keep these values in the CAD parameter table rather than scattering them through
 | Cable parking | Holder size, location, orientation, cable diameter, bend envelope |
 | Manufacturing | Chosen process/material, shrinkage and clearance allowances, print orientation |
 
-Values not yet measured are TBD. Choose a CAD application that preserves editable parametric source and can export STEP and printable meshes; no particular application has been selected. Prototype manufacturing is 3D printing. Material and process selection must support repeatable snap behavior and acceptable surface finish.
+Values not yet measured are TBD. Choose a CAD application that preserves editable parametric source and can export STEP and printable meshes; Fusion is used for the current prototype. Prototype manufacturing is 3D printing. Material and process selection must support repeatable snap behavior and acceptable surface finish.
 
 Deliver editable CAD source, a parameter table, STEP solids/assembly, STL or 3MF print files, and a dimensioned drawing. Include an exploded assembly view, section views through the switches/USB/latches, print settings, assembly instructions, and the compatible PCB revision. A rendering alone is not the enclosure deliverable.
 
