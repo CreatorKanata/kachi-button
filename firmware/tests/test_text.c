@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "text.h"
+#include "settings.h"
 
 static void expect_empty(uint8_t *r) {
     uint8_t i;
@@ -16,6 +17,7 @@ int main(void) {
     const uint8_t shifts[3][6] = {{2, 0, 0, 2, 0, 2}, {2, 0, 2}, {2, 0, 0}};
     const uint8_t lengths[] = {6, 3, 3};
     uint8_t r[8], retry[8], caps, id, pos, i;
+    settings_init();
     for (caps = 0; caps < 2; ++caps) {
         for (id = 0; id < 3; ++id) {
             text_reset();
@@ -23,7 +25,7 @@ int main(void) {
             assert(!text_start(id + 1));
             assert(text_peek(caps, r));
             expect_empty(r);
-            text_accepted();
+            text_accepted(0);
             assert(!text_busy());
             assert(!text_start(0) && !text_start(KEY_COUNT + 1));
             assert(text_start(id + 1));
@@ -39,20 +41,20 @@ int main(void) {
                 /* A busy endpoint does not advance the text cursor. */
                 assert(text_peek(caps, retry));
                 assert(memcmp(r, retry, 8) == 0);
-                text_accepted();
+                text_accepted(0);
                 assert(text_peek(caps, r));
                 expect_empty(r);
-                text_accepted();
+                text_accepted(0);
             }
             assert(!text_busy() && !text_peek(caps, r));
         }
     }
     assert(text_start(1));
-    text_accepted(); /* Simulate disconnect after key-down. */
+    text_accepted(0); /* Simulate disconnect after key-down. */
     text_reset();
     assert(text_peek(0, r));
     expect_empty(r);
-    text_accepted();
+    text_accepted(0);
     assert(!text_busy());
     puts("PASS: exact Go Go!/Hi!/Thx reports, case, space, punctuation, releases, retry, busy, cancel");
     return 0;

@@ -13,7 +13,9 @@ int main(void) {
         assert(keys_scan(mask, 100, 1) == 0);
         assert(keys_scan(mask, 100 + DEBOUNCE_MS - 1, 1) == 0);
         assert(keys_scan(mask, 100 + DEBOUNCE_MS, 1) == expected[i]);
-        assert(keys_scan(mask, 500, 1) == 0); /* No hold repeat. */
+        assert(keys_pressed_edges == mask);
+        assert(keys_scan(mask, 500, 1) == 0);
+        assert(!keys_pressed_edges); /* No hold repeat. */
         keys_scan(0, 600, 1);
         keys_scan(0, 600 + DEBOUNCE_MS, 1);
         keys_scan(mask, 700, 1);
@@ -34,7 +36,9 @@ int main(void) {
     keys_scan(0, DEBOUNCE_MS, 1);
     keys_scan(2, 100, 0);
     assert(keys_scan(2, 100 + DEBOUNCE_MS, 0) == 0);
-    assert(keys_scan(2, 200, 1) == 0); /* Busy presses are consumed. */
+    assert(keys_pressed_edges == 2); /* LED still acknowledges a busy-time press. */
+    assert(keys_scan(2, 200, 1) == 0);
+    assert(!keys_pressed_edges); /* Busy presses are consumed. */
 
     keys_reset(0, 65500);
     keys_scan(0, 65500 + DEBOUNCE_MS, 1);

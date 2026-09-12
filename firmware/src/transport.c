@@ -1,40 +1,11 @@
 /* CH552 EP1 transport, based on Deqing Sun's CH55xduino HID example (LGPL-2.1). */
 #include "transport.h"
-#include "boot_command.h"
+#include "settings.h"
 void delayMicroseconds(__data uint16_t us);
 static volatile __xdata uint8_t busy;
 volatile __xdata uint8_t kachi_usb_epoch;
 volatile __xdata uint8_t kachi_waiting;
 volatile __xdata uint8_t kachi_boot_requested;
-static uint8_t boot_pending;
-
-/* A new SETUP cancels any request whose status stage was not acknowledged. */
-void KachiControlCancel(void) { boot_pending = 0; }
-
-uint8_t KachiControlSetup(void) {
-    uint8_t command = boot_command_decode((uint8_t *)UsbSetupBuf, kachi_waiting);
-    if (command == BOOT_COMMAND_STATUS) {
-        Ep0Buffer[0] = 'K';
-        Ep0Buffer[1] = 'B';
-        Ep0Buffer[2] = 1; /* Protocol version. */
-        Ep0Buffer[3] = kachi_waiting;
-        return 4;
-    }
-    if (command == BOOT_COMMAND_ENTER) {
-        boot_pending = 1;
-        return 0;
-    }
-    return 0xff;
-}
-
-/* Called after EP0 IN ACK, so detach never interrupts the control transfer. */
-void KachiControlComplete(void) {
-    if (boot_pending) {
-        boot_pending = 0;
-        kachi_boot_requested = 1;
-    }
-}
-
 /* Match CH55xduino 0.0.26 USBCDC.c's CH552 software ISP entry sequence. */
 void enter_bootloader(void) {
 #if !defined(CH552) || BOOT_LOAD_ADDR != 0x3800
@@ -68,7 +39,8 @@ void USB_EP1_OUT(void) {}
 
 /* Called inside USB ISR at reset/configuration/suspend to drop stale input. */
 void KachiUsbReset(void) {
-    boot_pending = 0;
+    KachiControlCancel();
+    settings_cancel_edit();
     kachi_boot_requested = 0;
     UEP1_T_LEN = 0;
     UEP1_CTRL = (UEP1_CTRL & ~MASK_UEP_T_RES) | UEP_T_RES_NAK;

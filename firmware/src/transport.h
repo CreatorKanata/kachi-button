@@ -6,6 +6,7 @@
 extern volatile __xdata uint8_t kachi_usb_epoch;
 extern volatile __xdata uint8_t kachi_waiting;
 extern volatile __xdata uint8_t kachi_boot_requested;
+void KachiControlCancel(void);
 void USBInit(void);
 void enter_bootloader(void);
 void KachiUsbReset(void);

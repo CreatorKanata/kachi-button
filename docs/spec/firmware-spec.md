@@ -1,6 +1,6 @@
 # Firmware and Configuration Specification
 
-Status: configurable-release requirements and proposed baseline, September 6, 2026. The September 12 [fixed-text bring-up firmware](../../firmware/README.md) implements a keyboard-only subset; see its [validation record](../../firmware/bring-up.md). The configuration website and persistence remain unimplemented. See [product requirements](product-spec.md) and [the PCB pin map](pcb-spec.md).
+Status: configurable-release requirements and proposed baseline, September 6, 2026. The September 12 [firmware](../../firmware/README.md) implements configurable ASCII macros, repeat counts, ms intervals, DataFlash persistence, and host-initiated ISP via USB vendor control requests on a keyboard interface; see its [validation record](../../firmware/bring-up.md) for verification status. The proposed vendor HID interface and configuration website remain unimplemented. See [product requirements](product-spec.md) and [the PCB pin map](pcb-spec.md).
 
 ## Platform and build
 

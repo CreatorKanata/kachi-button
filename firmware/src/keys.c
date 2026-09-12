@@ -2,9 +2,11 @@
 #include "keys.h"
 
 static Key keys[KEY_COUNT];
+uint8_t keys_pressed_edges;
 
 void keys_reset(uint8_t pressed, uint16_t now) {
     uint8_t i;
+    keys_pressed_edges = 0;
     for (i = 0; i < KEY_COUNT; ++i) {
         keys[i].raw = (pressed >> i) & 1;
         keys[i].changed_at = now;
@@ -14,6 +16,7 @@ void keys_reset(uint8_t pressed, uint16_t now) {
 
 uint8_t keys_scan(uint8_t pressed, uint16_t now, uint8_t accepting) {
     uint8_t i, action = 0;
+    keys_pressed_edges = 0;
     for (i = 0; i < KEY_COUNT; ++i) {
         uint8_t raw = (pressed >> i) & 1;
         if (raw != keys[i].raw) {
@@ -27,6 +30,7 @@ uint8_t keys_scan(uint8_t pressed, uint16_t now, uint8_t accepting) {
             keys[i].armed = 1;
         } else if (keys[i].armed) {
             keys[i].armed = 0;
+            keys_pressed_edges |= 1 << i;
             /* One action at a time; simultaneous presses use physical order. */
             if (accepting && !action)
                 action = i + 1;

@@ -20,11 +20,13 @@ See the [top and bottom board previews](pcb/v1/README.md#board-previews) for rou
 
 Manufacturing exports are available in [pcb/v1](pcb/v1/README.md), including Gerber, BOM, pick-and-place, and STEP files. The design record explains the circuit, component choices, layout, and outstanding validation.
 
-The first [USB keyboard firmware](firmware/README.md) maps the upper, lower-left, and lower-right keys to `Go Go!`, `Hi!`, and `Thx`. See the [bring-up record](firmware/bring-up.md) for build and hardware verification. A browser-based configuration tool remains planned; enclosure fit and broader hardware validation remain separate checks.
+The [USB keyboard firmware](firmware/README.md) defaults to `Go Go!`, `Hi!`, and `Thx` on the upper, lower-left, and lower-right keys. A USB command-line tool can edit and save each key’s text, repeat count, and interval in milliseconds; host-initiated firmware upload is supported. See the [bring-up record](firmware/bring-up.md) for build and hardware verification. A browser-based configuration tool remains planned; enclosure fit and broader hardware validation remain separate checks.
 
 ## Development
 
 See the [detailed specifications](docs/README.md) for product requirements, PCB dimensions and placement, firmware, and the enclosure to be designed in 3D CAD. The latest design decisions fix keycap sizes at 33 × 18 mm for the upper key and 25 × 18 mm for each lower key; enclosure dimensions remain provisional. The purchased USB-C cable is nominally 10 cm long.
+
+For keyboard software, start with [firmware development](docs/firmware-development.md), the [feature inventory](docs/firmware-features.md), and [firmware internals](docs/firmware-internals.md). These describe the implemented CLI configuration and upload paths; the product specifications also include future requirements.
 
 PCB and schematic work uses the EasyEDA MCP / `easyeda-api` skill workflow. See [PCB development with EasyEDA](docs/pcb-development.md) for connection setup, editing practices, verification, and export steps.
 

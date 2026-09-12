@@ -1,8 +1,22 @@
 """Minimal libusb EP0 access; leave the macOS keyboard driver attached."""
 import ctypes as C
+import os
+import sys
 from ctypes.util import find_library
 
 import config
+
+
+class Version(C.Structure):
+    _fields_ = [('major', C.c_uint16), ('minor', C.c_uint16),
+                ('micro', C.c_uint16), ('nano', C.c_uint16),
+                ('rc', C.c_char_p), ('describe', C.c_char_p)]
+
+
+def require_libusb_version(version, platform):
+    if platform == 'darwin' and version < config.MIN_MACOS_LIBUSB:
+        raise RuntimeError('macOS upload requires libusb >= 1.0.30 to avoid detach/exit deadlock; '
+                           'set KACHI_LIBUSB or --libusb to the newer library')
 
 
 class Descriptor(C.Structure):
@@ -16,10 +30,14 @@ class Descriptor(C.Structure):
 
 class UsbControl:
     def __init__(self, library=None):
-        path = library or find_library('usb-1.0')
+        path = library or os.environ.get('KACHI_LIBUSB') or find_library('usb-1.0')
         if not path:
             raise RuntimeError('libusb-1.0 not found; use --libusb /path/to/library')
         self.lib = C.CDLL(path)
+        self.lib.libusb_get_version.argtypes = []
+        self.lib.libusb_get_version.restype = C.POINTER(Version)
+        version = self.lib.libusb_get_version().contents
+        require_libusb_version((version.major, version.minor, version.micro), sys.platform)
         self.ctx = C.c_void_p()
         self.handle = C.c_void_p()
         signatures = {
@@ -72,10 +90,10 @@ class UsbControl:
         finally:
             self.lib.libusb_free_device_list(devices, 1)
 
-    def transfer(self, direction, request, length=0):
+    def transfer(self, direction, request, length=0, index=0):
         buf = C.create_string_buffer(max(length, 1))
         n = self.check(self.lib.libusb_control_transfer(self.handle, direction,
-            request, config.BOOT_COMMAND_MAGIC, 0, buf, length,
+            request, config.BOOT_COMMAND_MAGIC, index, buf, length,
             config.USB_CONTROL_TIMEOUT_MS))
         if n != length:
             raise RuntimeError(f'Incomplete USB transfer: {n} of {length} bytes')

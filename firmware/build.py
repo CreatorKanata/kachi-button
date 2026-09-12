@@ -85,28 +85,26 @@ def main():
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
     sketch = stage(args.data.resolve(), out)
-    test = out / 'test_keys'
-    subprocess.run(['cc', '-std=c99', '-Wall', '-Wextra', '-Werror',
-                    '-I' + str(sketch / 'src'), str(ROOT / 'tests/test_keys.c'),
-                    str(ROOT / 'src/keys.c'), '-o', str(test)], check=True)
-    subprocess.run([str(test)], check=True)
-    text_test = out / 'test_text'
-    subprocess.run(['cc', '-std=c99', '-Wall', '-Wextra', '-Werror',
-                    '-I' + str(sketch / 'src'), str(ROOT / 'tests/test_text.c'),
-                    str(ROOT / 'src/text.c'), '-o', str(text_test)], check=True)
-    subprocess.run([str(text_test)], check=True)
-    boot_test = out / 'test_boot_gesture'
-    subprocess.run(['cc', '-std=c99', '-Wall', '-Wextra', '-Werror',
-                    '-I' + str(sketch / 'src'), str(ROOT / 'tests/test_boot_gesture.c'),
-                    str(ROOT / 'src/boot_gesture.c'), '-o', str(boot_test)], check=True)
-    subprocess.run([str(boot_test)], check=True)
-    command_test = out / 'test_boot_command'
-    subprocess.run(['cc', '-std=c99', '-Wall', '-Wextra', '-Werror',
-                    '-I' + str(sketch / 'src'), str(ROOT / 'tests/test_boot_command.c'),
-                    str(ROOT / 'src/boot_command.c'), '-o', str(command_test)], check=True)
-    subprocess.run([str(command_test)], check=True)
+    suites = {
+        'keys': ['src/keys.c'],
+        'key_led': ['src/key_led.c'],
+        'text': ['src/text.c', 'src/settings.c', 'src/storage.c', 'tests/fake_nv.c'],
+        'repeat': ['src/text.c', 'src/settings.c', 'src/storage.c', 'tests/fake_nv.c'],
+        'settings': ['src/settings.c', 'src/storage.c', 'tests/fake_nv.c'],
+        'boot_gesture': ['src/boot_gesture.c'],
+        'boot_command': ['src/boot_command.c'],
+        'device_control': ['src/device_control.c', 'src/boot_command.c',
+                           'src/settings.c', 'src/storage.c', 'tests/fake_nv.c'],
+    }
+    for name, sources in suites.items():
+        test = out / ('test_' + name)
+        flags = ['-include', str(ROOT / 'tests/usb_stub.h')] if name == 'device_control' else []
+        subprocess.run(['cc', '-std=c99', '-Wall', '-Wextra', '-Werror',
+                        *flags, '-I' + str(sketch / 'src'), str(ROOT / f'tests/test_{name}.c'),
+                        *[str(ROOT / source) for source in sources], '-o', str(test)], check=True)
+        subprocess.run([str(test)], check=True)
     subprocess.run(['python3', '-m', 'unittest', 'discover', '-s',
-                    str(ROOT / 'tests'), '-p', 'test_flash.py'], check=True,
+                    str(ROOT / 'tests'), '-p', 'test_*.py'], check=True,
                    env=dict(os.environ, PYTHONPATH=str(ROOT)))
     if not args.test_only:
         env = dict(os.environ, ARDUINO_DIRECTORIES_DATA=str(args.data.resolve()),

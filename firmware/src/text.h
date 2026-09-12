@@ -7,5 +7,6 @@ void text_reset(void);
 uint8_t text_busy(void);
 uint8_t text_start(uint8_t action);
 uint8_t text_peek(uint8_t caps_lock, uint8_t *report);
-void text_accepted(void);
+void text_tick(uint16_t now);
+void text_accepted(uint16_t now);
 #endif

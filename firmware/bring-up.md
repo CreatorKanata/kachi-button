@@ -2,6 +2,9 @@
 
 Target: manufactured Kachi Button PCB v1, connected by USB-C to macOS.
 
+Sections are historical snapshots for individual builds. Later sections supersede
+earlier pending checks when explicitly verified. The [current feature inventory](../docs/firmware-features.md) summarizes current evidence; the latest flashed build is the physical-key LED feedback revision.
+
 - Initial enumeration: WCH ISP `4348:55e0`.
 - Read-only identification: CH552 (`0x5211`), bootloader 2.50.
 - Native scanner/report tests: passed.
@@ -71,3 +74,46 @@ Each press sends exactly the text without Enter or a trailing separator.
   80 seconds later, confirming wait persistence beyond the 16-bit timer wrap.
 - Physical fast-blink appearance and the new uploader-to-ISP command followed
   by flashing remain unverified. No second flash was performed for this check.
+
+
+## Configurable macros, ms intervals, and remote ISP revision
+
+- Per-key printable ASCII text (0–32 characters), repetitions (1–99), and
+  repeat interval (0–60,000 ms). Empty text disables the key.
+- Settings can be read/edited in normal mode and explicitly saved to DataFlash.
+- Protocol v2 permits host-initiated ISP from normal or write-wait mode.
+- Seven native C suites and five Python tests passed, including actual EP0
+  adapter tests, timer wrap, settings snapshots, and all partial EEPROM writes.
+- CH552 build: 9,247 / 14,336 flash bytes; 382 / 876 application XRAM bytes.
+- HEX SHA-256: `9382f03136e373130f44ca30a1575828af89f9475c3d498d21f8fbe302dac127`.
+- Installed on CH552 UID BE-A2-CA-BE at 06:36:36 UTC, September 12, 2026;
+  wchisp returned `Verify OK`. Status returned protocol v2, normal mode.
+- Normal-mode USB configuration read/edit/read-back and EEPROM save succeeded.
+  A temporary top-key configuration used the original text, repeat 3, and 250 ms.
+- Without any button gesture, the host requested ISP and reflashed the same HEX;
+  `Verify OK` at 06:38:01 UTC. The saved test configuration loaded after reset.
+- Restored all three original texts, repeat 1, interval 0 ms; saved and read back.
+- USB detach exposed a libusb 1.0.29 macOS exit/hotplug deadlock before the first
+  upload began. Process sampling localized it to libusb_exit/darwin_exit waiting
+  on a detached-device event. Built official libusb 1.0.30 locally, then both
+  uploads completed. The host tool now rejects macOS libusb older than 1.0.30.
+- Seven C suites and six Python tests pass, including the new dependency guard.
+- Physical repeated key output and host-observed ms timing remain unmeasured.
+  EEPROM retention across application reset/reflash is verified; unplug/replug
+  retention and deliberately interrupted saves have not been physically tested.
+
+
+## Physical-key LED feedback revision
+
+- Each debounced physical press causes one 10 ms off pulse of the normally lit
+  LED, including presses discarded during busy macros. No hold/repeat pulses.
+- Startup/write-wait patterns and suspend handling take priority.
+- Eight native C suites and six Python tests passed, including pulse boundaries,
+  wrap, reset, busy-time press edges, and no timer-wrap retrigger.
+- Build: 9,425 / 14,336 flash bytes; 389 / 876 application XRAM bytes.
+- HEX SHA-256: `7fca7951f728ed177832d96a7353cc2c476be5078eec526cd1784816ed6a148e`.
+- Programmed CH552 BE-A2-CA-BE via normal-mode remote ISP at 07:09:41 UTC,
+  September 12, 2026. `Verify OK`; configuration reads succeeded after reset.
+- Saved Go Go! / Hi! / Thx, repeat 1, interval 0 ms remained intact.
+- Physical LED waveform duration has not been measured; 10 ms is the software
+  timer target, subject to main-loop scheduling and interrupt latency.

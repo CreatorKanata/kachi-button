@@ -1,33 +1,149 @@
 # Kachi Button firmware
 
-Fixed-mapping USB HID bring-up for PCB v1 (CH552E), September 12, 2026.
-This implements the requested first firmware; browser configuration and stored
-macros remain future work.
+Configurable text macros for PCB v1 (CH552E), September 12, 2026.
 
-| Physical button | MCU GPIO | Output |
-| --- | --- | --- |
-| Top / SW1 | P1.5 | `Go Go!` |
-| Lower left / SW2 | P1.6 | `Hi!` |
-| Lower right / SW3 | P1.7 | `Thx` |
+See the [development guide](../docs/firmware-development.md), [feature inventory](../docs/firmware-features.md), and [internals](../docs/firmware-internals.md) for task-oriented documentation.
 
-Each debounced press sends its full text, with a key-down and all-released
-report for every character. Physical IDs are 0 (Top), 1 (Left), and 2 (Right). Holding a key does not repeat. Use a Latin keyboard input source (for
-example ABC) and release other modifiers during testing. Caps Lock is accounted
-for using the host's LED report; IME conversion and arbitrary layouts are host
-behavior. Inputs have internal pull-ups and a 15 ms stable debounce interval.
-Keys held at connection, USB reset or resume must be released before use.
-Simultaneous presses use Top, Left, Right priority; a press accepted while another
-text macro is active is discarded until that key is released. No Enter is sent.
+| ID | Physical key | GPIO | Default text |
+| --- | --- | --- | --- |
+| 0 | Top / SW1 | P1.5 | `Go Go!` |
+| 1 | Lower left / SW2 | P1.6 | `Hi!` |
+| 2 | Lower right / SW3 | P1.7 | `Thx` |
 
-P1.4 drives the active-low status LED: on when configured and active, off before
-configuration or during suspend. Remote wakeup is not advertised. Suspend current
-has not been measured; this bring-up build does not put the CPU into power-down.
+Each key has 0–32 printable ASCII characters, 1–99 repetitions and a
+0–60,000 ms repeat interval. Defaults use one repetition and 0 ms.
+An empty text disables that key. One physical press executes the entire macro;
+holding the key does not retrigger it. No Enter or separator is added.
+
+The interval is the software delay after the final release report of one copy
+is queued and before the next copy begins. Each character still has a key-down
+and release report, paced by the USB endpoint. Actual host-observed timing is
+quantized by the 10 ms USB polling interval and host scheduling; this is not a
+precision pulse generator. A zero interval adds no extra delay.
+
+Use a US/ABC-compatible Latin keyboard layout with other modifiers released.
+The firmware accounts for Caps Lock, but does not implement IME conversion,
+Unicode text, arbitrary keyboard layouts, or automatic Enter.
+
+Inputs have pull-ups and 15 ms debounce. Held startup/resume keys require release.
+Only one macro runs at a time; presses while busy are discarded until release.
+Simultaneous presses use Top, Left, Right priority. Settings updates do not alter
+an already running macro; each accepted press snapshots its text/count/interval.
+USB reset or suspend cancels the current macro and staged configuration edit.
+
+## Configure from the host
+
+Python 3 and a libusb shared library are required (on macOS, 1.0.30 or newer). No CDC serial port or
+browser UI is included. These commands use vendor requests on the keyboard's
+USB control endpoint without claiming/detaching its HID interface.
+
+```sh
+# Read all keys and save status.
+python3 firmware/configure.py get
+
+# A single top-key press types Go! three times with 250 ms gaps; persist it.
+python3 firmware/configure.py set 0 --text 'Go!' --repeat 3 --interval-ms 250 --save
+
+# Changes without --save apply in RAM; persist all three keys explicitly.
+python3 firmware/configure.py save
+```
+
+For a library outside the search path, place
+`--libusb /path/to/libusb-1.0.dylib` before the subcommand, or set the
+`KACHI_LIBUSB` environment variable. macOS libusb 1.0.29 was observed deadlocking
+in exit during USB detach; the tool rejects it before opening USB. Version
+1.0.30 contains [Darwin concurrency fixes](https://github.com/libusb/libusb/blob/master/ChangeLog). Set operates on one key;
+`--repeat` defaults to 1 and `--interval-ms` to 0. Run one configuration writer
+at a time. The tool checks capability, validates input, applies a complete key
+atomically, reads it back, and waits for verified save completion when requested.
+
+## Saved settings
+
+CH552 provides 128 logical DataFlash bytes. This version uses bytes 0–113:
+`KC`, schema 1, three 36-byte macros, CRC-16/CCITT-FALSE (little endian), and
+commit marker `0xa5`. Each macro is count, length, interval-ms low/high bytes,
+then 32 zero-padded ASCII bytes. Addresses 114–127 remain unused.
+
+Save invalidates the marker first, updates and reads back every changed byte,
+then writes the commit marker last. Identical saves perform no EEPROM writes.
+Invalid schema, checksum, text, ranges, or commit marker loads all defaults.
+Only explicit save writes EEPROM. Flashing application code leaves it intact.
+
+There is one record, not two: interrupted save can lose the previous saved
+configuration and fall back to defaults. The implementation never intentionally
+loads a partially committed record. Unchanged valid records remain available if
+failure occurs before invalidation. A save error is returned to the host.
+
+The pinned [CH55xduino EEPROM implementation](https://github.com/DeqingSun/ch55xduino/blob/ch55xduino/ch55xduino/ch55x/cores/ch55xduino/eeprom.c)
+uses logical byte addresses 0–127 and the CH552 DataFlash write sequence.
+The wrapper masks interrupts for each byte's protected register accesses; saving
+runs in the foreground, with status requests available between byte operations.
+
+## Firmware upload and waiting
+
+Protocol v2 accepts a host ISP-entry command from normal mode or write-wait mode.
+An AI/host tool can now update firmware without a physical key gesture:
+
+```sh
+python3 firmware/flash.py --status
+python3 firmware/flash.py firmware/build/compiled/kachi_button.ino.hex --wchisp /path/to/wchisp
+
+# Optional: enter native ISP without immediately flashing.
+python3 firmware/flash.py --enter
+```
+
+The uploader validates the known firmware protocol, requests ISP, waits for the
+new USB identity, and invokes wchisp with verification enabled. It refuses
+unknown protocols, missing files/tools, multiple keyboard targets, or an already
+attached WCH ISP target. Keep only the intended target attached during upload.
+These local USB commands are intentionally host-controlled, not authenticated.
+
+The physical alternative remains: hold all three keys before connecting USB,
+then keep holding for 2 seconds. Slow blinking (250 ms on/off) changes to fast
+blinking (75 ms on/off). After confirmation, release the keys and wait indefinitely.
+USB reset/suspend and key changes do not clear confirmed waiting; power/MCU reset
+does. Text output is suppressed in this state. Reconnect without keys for normal
+operation. Normal mode lights the LED while USB is configured and active.
+Each debounced physical press produces one 10 ms off pulse, then steady on.
+This includes presses ignored during a running macro; holding a key does not
+repeat the pulse. Software-generated repetitions do not trigger extra pulses.
+The nonblocking pulse timer yields to startup/write-wait patterns and USB suspend.
+
+The application retains identity `1209:c55d` while waiting. Native ISP starts
+only when the host requests it, then the application LED loop stops. Native ISP
+has its own timeout; use the integrated uploader when programming. A successful
+flash resets the device into the new application. Fast blinking is guaranteed by
+the application waiting logic, not during native ISP itself.
+
+Bootloader entry follows pinned CH55xduino 0.0.26 `USBCDC.c`: USB detach, disable
+interrupts/timer mode, 100 ms delay, call CH552 address `0x3800`. No configuration
+registers or bootloader code are rewritten. Boards still running protocol-v1 firmware
+require the three-key wait for the one-time upgrade; this uploader also
+supports that legacy wait state. The oldest K/N/A firmware requires hardware ISP.
+
+### Native ISP and recovery
+
+A blank CH552 normally appears as WCH ISP `4348:55e0`. Use tested
+[wchisp](https://github.com/ch32-rs/wchisp) 0.3.0, commit
+`cefd8707df345f1fbd7795e15367281f440bbf05`:
+
+```sh
+wchisp info --chip CH552
+wchisp flash firmware/build/compiled/kachi_button.ino.hex
+```
+
+The command erases application flash, programs, verifies, and resets. If an
+upload fails after erasing the application, use native ISP directly for recovery.
+The retained factory hardware-entry setting uses D+. With USB disconnected,
+connect D+ to 5 V through a 10 kOhm resistor, then reconnect USB; remove the
+pull-up after ISP entry. Never directly short D+ to 5 V. PCB v1 has labeled test
+pads. This hardware recovery wiring has not been physically tested on this board.
+See [upstream entry instructions](https://github.com/DeqingSun/ch55xduino#installation).
 
 ## Build and test
 
-Dependencies: Python 3, a native C compiler, Arduino CLI, and CH55xduino 0.0.26
-(SDCC build.13407_4, MCS51Tools 2026.07.10). The tested Arduino CLI is 1.3.1.
-Install the pinned core into your preferred Arduino data directory:
+Dependencies: Python 3, a native C compiler, Arduino CLI and CH55xduino 0.0.26
+(SDCC build.13407_4, MCS51Tools 2026.07.10); tested CLI version is 1.3.1.
 
 ```sh
 export ARDUINO_DIRECTORIES_DATA="$PWD/.arduino-data"
@@ -36,116 +152,53 @@ arduino-cli core install CH55xDuino:mcs51@0.0.26 --additional-urls https://raw.g
 python3 firmware/build.py --data "$ARDUINO_DIRECTORIES_DATA"
 ```
 
-Pass `--cli /path/to/arduino-cli` if it is not on PATH. `--test-only` runs the
-native scanner/report tests without compiling for CH552. `--out /path/to/build`
-selects the output directory. All board/timing/identifier settings live in
-`config.py`, which generates `src/config.h` for both native and device builds.
+Use `--cli /path/to/arduino-cli`, `--out /path/to/build`, or `--test-only` as
+needed. All limits, timing and identifiers are centralized in `config.py`.
+Output is `firmware/build/compiled/kachi_button.ino.hex` with map/memory files.
 
-The script stages the pinned upstream HID control/descriptor sources into the
-build directory and applies checked substitutions. Local changes set the product
-strings and power declaration, remove remote wakeup, and clear pending reports
-on USB lifecycle events. The custom EP1 sender is nonblocking. Build staging
-avoids maintaining a duplicate copy of the upstream USB control implementation.
-CH55xduino's upstream source is LGPL-2.1; retain upstream license/source and
-relinkable build objects if redistributing a firmware binary.
+Build staging copies pinned upstream HID descriptors/control handlers and makes
+checked substitutions for product strings, power, lifecycle hooks and vendor
+requests. Application flash is limited to 14,336 bytes; 148 XRAM bytes are
+reserved for USB, leaving 876 for the application. CH55xduino's USB code and the
+ASCII map are LGPL-2.1; retain the corresponding source, license and relinkable
+objects when redistributing binaries.
 
-Output: `firmware/build/compiled/kachi_button.ino.hex`, with `.map`, `.mem` and
-link objects beside it. Application flash is limited to 14,336 bytes (bootloader
-excluded). 148 bytes of XRAM are reserved for USB; application XRAM limit is 876.
-USB uses development VID:PID `1209:c55d`, one boot keyboard interface, endpoint
-`0x81`, eight-byte reports, and a 10 ms polling interval. This is the upstream
-CH55xduino keyboard identity, not an independently allocated product VID/PID.
+USB identity is the upstream development VID:PID `1209:c55d`, not an allocated
+production identifier. One boot keyboard interface uses endpoint `0x81` with
+eight-byte reports at 10 ms. Remote wake is not advertised. Suspend extinguishes
+the normal LED; confirmed write-wait continues blinking. Power consumption and
+suspend compliance have not been measured.
 
-## Flash
+## USB control protocol v2
 
-The first blank board was already in WCH USB ISP mode (`4348:55e0`). Its chip
-identified as CH552 and bootloader 2.50. Flash using
-[wchisp](https://github.com/ch32-rs/wchisp), tested version 0.3.0 at commit
-`cefd8707df345f1fbd7795e15367281f440bbf05`:
+All requests use wValue `0x4b42`. IN type is `0xc0`; OUT type is `0x40`.
+OUT commands have zero data length; mutation occurs only after status-stage ACK.
+A new SETUP cancels an unacknowledged command. Invalid requests stall.
 
-```sh
-wchisp info --chip CH552
-wchisp flash firmware/build/compiled/kachi_button.ino.hex
-```
+| Request | Direction/length | wIndex | Meaning |
+| --- | --- | --- | --- |
+| `0x5a` | IN / 4 | 0 | `KB`, version 2, waiting flag |
+| `0x5b` | OUT / 0 | 0 | Enter native ISP from either mode |
+| `0x60` | IN / 8 | 0 | `KC`, version 2, max text, max count, result, saving, dirty |
+| `0x61` | IN / 1–8 | offset high, key ID low | Read a macro slice, within 36 bytes |
+| `0x62` | OUT / 0 | key ID | Begin a new single-key staged edit |
+| `0x63` | OUT / 0 | byte value high, offset low | Append next sequential byte, 0–35 |
+| `0x64` | OUT / 0 | 0 | Validate and atomically apply the complete staged macro |
+| `0x65` | OUT / 0 | 0 | Queue save, poll info for completion |
 
-Only attach the intended WCH ISP target when flashing. The command erases the
-application area, programs, verifies, then resets. Keep verification enabled.
-The implementation does not write EEPROM, change boot-pin configuration, or
-include a CDC interface for automatic upload reset.
-
-### Button entry and unlimited write waiting (after installing this revision)
-
-Hold all three keys before connecting USB, then keep them pressed for 2 seconds.
-The LED blinks slowly during the hold (250 ms on / 250 ms off). At confirmation,
-it changes to fast blinking (75 ms on / 75 ms off) and stays in write-wait mode
-without a timeout. Release the keys and take as long as needed before uploading.
-No text is emitted in either gesture or write-wait state. Early release cancels
-the gesture; pressing all keys later during normal operation cannot rearm it.
-USB bus reset, reconfiguration, suspend/resume, button changes, and clock wrap
-do not clear the confirmed wait. Disconnect power and reconnect without holding
-keys to return to normal use. MCU reset also clears the wait.
-
-The native WCH bootloader cannot run our LED loop. Therefore write-wait runs in
-the application, retaining USB identity `1209:c55d`, with keyboard input suppressed.
-Use the provided uploader when ready; it checks the wait state, requests native
-ISP, and immediately invokes wchisp while the bootloader is available:
-
-```sh
-python3 firmware/flash.py --status
-python3 firmware/flash.py firmware/build/compiled/kachi_button.ino.hex --wchisp /path/to/wchisp
-```
-
-The uploader requires Python 3, libusb 1.0 (a shared library), and wchisp. Use
-`--libusb /path/to/libusb-1.0.dylib` if automatic library discovery fails. It uses
-EP0 vendor control requests and does not claim or detach the keyboard interface.
-Only one matching Kachi device and no other WCH ISP devices may be attached.
-Direct `wchisp flash` cannot switch the application out of write-wait mode.
-
-Fast blinking continues throughout user waiting, but stops when the uploader
-hands control to native ISP. After successful programming and reset, the new
-firmware starts. If upload fails after ISP entry, reconnect with the gesture to
-retry; if the application was erased, use native ISP directly for recovery.
-
-The vendor-control protocol uses device recipient, wValue `0x4b42`, wIndex 0:
-- IN `0xc0`, request `0x5a`, length 4 returns `4b 42 01 <waiting>`; waiting is 0 or 1.
-- OUT `0x40`, request `0x5b`, length 0 starts ISP only when waiting is 1.
-Malformed requests stall. Entry is queued only after the status-stage ACK, and
-new SETUP/reset cancels an incomplete request. Identifiers are not authentication;
-the physical startup gesture gates entry.
-
-Native entry follows CH55xduino 0.0.26 `USBCDC.c`: disable USB and interrupts,
-clear timer mode, allow 100 ms USB detach, then call the CH552 bootloader at
-`0x3800`. No flash configuration, EEPROM, or bootloader code is rewritten.
-The software-only waiting approach avoids depending on the native bootloader's
-[documented timeout](https://github.com/DeqingSun/ch55xduino#driver-for-windows).
-USB transfers follow the [libusb control-transfer API](https://libusb.sourceforge.io/api-1.0/group__libusb__syncio.html).
-
-### First installation on an already programmed board / recovery
-
-The older K/N/A firmware does not have the button-entry feature. Installing this
-revision on that board once requires hardware ISP entry (or a blank board).
-The retained factory boot-pin setting uses D+.
-[CH55xduino's documented hardware entry procedure](https://github.com/DeqingSun/ch55xduino#installation)
-is to disconnect power, connect D+ to 5 V **through a 10 kOhm resistor**, and
-reconnect USB. Remove the temporary pull-up after entering ISP mode. PCB v1 has
-marked D+ and 5V test pads. Never directly short these pads. This recovery
-procedure has not yet been physically tested on this board; the first write used
-the blank chip's automatic bootloader entry. The three-key gesture only works after installing the new revision. Do not
-treat RST as an active-low reset.
+Save result: 0 success, 1 pending, 2 storage error. Edits and ISP entry stall
+while saving; read-only requests remain available. Repeating an edit must start
+with begin; a second client can replace a staged edit, so writers must serialize.
+No configuration command emits keyboard input.
 
 ## Validation
 
-Native tests cover the actual C scanner and report builder: all three mappings,
-case/Caps Lock, spaces, punctuation, per-character release, retry, cancellation, debounce boundaries/bounce, startup-held
-keys, repeat suppression, busy-time presses, simultaneous priority, and timer
-wrap. Startup-only boot entry, the 2-second boundary, cancellation, and no
-rearming during normal use, and a simulated one-hour latched wait are covered by
-`tests/test_boot_gesture.c`. `tests/test_boot_command.c` checks command validation
-and the physical gate; `tests/test_flash.py` checks uploader refusal and ordering. See also
-`tests/test_keys.c` and `tests/test_text.c`.
+Eight native C suites cover scanning, default reports, repetitions and ms gaps,
+snapshot behavior, startup waiting, remote ISP validation, the actual EP0 adapter,
+settings bounds, EEPROM round-trip, corruption and all injected partial writes.
+Six Python tests cover uploader gating/ordering and configuration encoding/wire
+commands. Native tests do not prove physical timing, EEPROM or signal quality.
+See [bring-up.md](bring-up.md) for build sizes and actual hardware checks.
 
-See `bring-up.md` for the measured build size and actual hardware verification.
-On first macOS connection, dismiss Keyboard Setup Assistant with Quit; this
-three-key device cannot perform its full-keyboard identification sequence. Then
-select a Latin input source and test Top, Left, Right for `Go Go!Hi!Thx` (no separator or Enter is added).
-Host tests do not prove physical switch mapping, signal quality or power behavior.
+Dismiss macOS Keyboard Setup Assistant with Quit; three keys cannot complete its
+full-keyboard identification procedure.

@@ -5,15 +5,23 @@ import unittest
 from unittest.mock import Mock, patch
 
 import config
-from flash import require_waiting, upload
+from usb_control import require_libusb_version
+from flash import require_uploadable, upload
 
 
 class FlashTests(unittest.TestCase):
+    def test_reject_macos_hotplug_deadlock_dependency(self):
+        with self.assertRaises(RuntimeError):
+            require_libusb_version((1, 0, 29), 'darwin')
+        require_libusb_version((1, 0, 30), 'darwin')
+        require_libusb_version((1, 0, 29), 'linux')
+
     def test_reject_unknown_and_unarmed_status(self):
-        for value in (b'', b'KB\x01\x00', b'KB\x02\x01', b'XX\x01\x01'):
+        for value in (b'', b'KB\x01\x00', b'KB\x03\x01', b'XX\x01\x01'):
             with self.assertRaises(RuntimeError):
-                require_waiting(value)
-        require_waiting(b'KB\x01\x01')
+                require_uploadable(value)
+        for value in (b'KB\x01\x01', b'KB\x02\x00', b'KB\x02\x01'):
+            require_uploadable(value)
 
     def test_upload_order_and_fail_closed(self):
         with tempfile.NamedTemporaryFile(suffix='.hex') as file:
@@ -25,7 +33,7 @@ class FlashTests(unittest.TestCase):
                     upload(usb, path, 'wchisp', run)
                 usb.enter.assert_not_called()
                 run.assert_not_called()
-                usb.status.return_value = b'KB\x01\x01'
+                usb.status.return_value = b'KB\x02\x00'
                 events = []
                 usb.enter.side_effect = lambda: events.append('enter')
                 usb.close.side_effect = lambda: events.append('close')
