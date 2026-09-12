@@ -12,7 +12,7 @@ Start with the [development guide](firmware-development.md) for routine use.
 | [kachi_button.ino](../firmware/kachi_button.ino) | Coordinate input, settings-save job, boot state, LED and HID scheduling |
 | [keys.c](../firmware/src/keys.c) | Debounced physical edges and one-action-at-a-time selection |
 | [text.c](../firmware/src/text.c) | Snapshot text/count/interval; queue key-down/release reports and timed repetitions |
-| [key_led.c](../firmware/src/key_led.c) | Nonblocking 10 ms physical-press feedback |
+| [key_led.c](../firmware/src/key_led.c) | 2 s HID-entry indication, idle off, and 30 ms key-on pulses |
 | [boot_gesture.c](../firmware/src/boot_gesture.c) | Startup-only two-second hold and latched write-wait |
 | [boot_command.c](../firmware/src/boot_command.c) | Strict boot/status USB request validation |
 | [device_control.c](../firmware/src/device_control.c) | EP0 control protocol and commit-after-ACK dispatch |

@@ -1,16 +1,26 @@
-/* Pulse the normally lit LED off; latch expiry so clock wrap cannot retrigger it. */
+/* Indicate HID entry for 2 s, then pulse on for presses; no blocking delays. */
 #include "key_led.h"
-static uint8_t pulsing;
+enum { IDLE, START_PENDING, START_LIT, KEY_LIT };
+static uint8_t state;
 static uint16_t started_at;
 
-void key_led_reset(void) { pulsing = 0; }
+void key_led_reset(void) { state = START_PENDING; }
 
-uint8_t key_led_off(uint8_t pressed_edges, uint16_t now) {
+uint8_t key_led_on(uint8_t pressed_edges, uint16_t now) {
+    if (state == START_PENDING) {
+        state = START_LIT;
+        started_at = now;
+    }
+    if (state == START_LIT) {
+        /* Entry indication has priority; presses neither shorten nor extend it. */
+        if ((uint16_t)(now - started_at) < HID_START_LED_MS) return 1;
+        state = IDLE;
+    }
     if (pressed_edges) {
         started_at = now;
-        pulsing = 1;
+        state = KEY_LIT;
     }
-    if (pulsing && (uint16_t)(now - started_at) >= KEY_LED_PULSE_MS)
-        pulsing = 0;
-    return pulsing;
+    if (state == KEY_LIT && (uint16_t)(now - started_at) >= KEY_LED_PULSE_MS)
+        state = IDLE;
+    return state == KEY_LIT;
 }

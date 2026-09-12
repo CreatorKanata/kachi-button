@@ -29,6 +29,7 @@ void setup(void) {
     boot_gesture_init(read_keys(), (uint16_t)millis());
     settings_init();
     text_reset();
+    key_led_reset();
     USBInit();
 }
 
@@ -63,7 +64,7 @@ void loop(void) {
         return;
     }
     action = keys_scan(pressed, now, !text_busy() && hid_ready());
-    digitalWrite(LED_PIN, key_led_off(keys_pressed_edges, now) ? HIGH : LOW);
+    digitalWrite(LED_PIN, key_led_on(keys_pressed_edges, now) ? LOW : HIGH);
     if (action) {
         /* Snapshot a whole macro atomically against USB configuration updates. */
         uint8_t saved = IE_USB;

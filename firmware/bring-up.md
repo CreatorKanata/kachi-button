@@ -3,7 +3,7 @@
 Target: manufactured Kachi Button PCB v1, connected by USB-C to macOS.
 
 Sections are historical snapshots for individual builds. Later sections supersede
-earlier pending checks when explicitly verified. The [current feature inventory](../docs/firmware-features.md) summarizes current evidence; the latest flashed build is the physical-key LED feedback revision.
+earlier pending checks when explicitly verified. The [current feature inventory](../docs/firmware-features.md) summarizes current evidence; the latest flashed build is the normally-off HID LED revision.
 
 - Initial enumeration: WCH ISP `4348:55e0`.
 - Read-only identification: CH552 (`0x5211`), bootloader 2.50.
@@ -117,3 +117,30 @@ Each press sends exactly the text without Enter or a trailing separator.
 - Saved Go Go! / Hi! / Thx, repeat 1, interval 0 ms remained intact.
 - Physical LED waveform duration has not been measured; 10 ms is the software
   timer target, subject to main-loop scheduling and interrupt latency.
+
+
+## 30 ms LED feedback revision
+
+- Changed the physical-key off pulse from 10 ms to 30 ms; USB polling remains 10 ms.
+- Eight C suites and six Python tests passed. Build: 9,425 flash bytes, 389 XRAM bytes.
+- HEX SHA-256: `1060a58a6579e76caaa09e9d5efdf2fdc0ee0b9bdebf015477dcf6402ec81e2f`.
+- Flashed CH552 BE-A2-CA-BE through host-only ISP at 08:19:01 UTC on September 12,
+  2026; `Verify OK`. Post-reset configuration reads succeeded with the saved
+  Go Go! / Hi! / Thx, repeat 1, interval 0 ms intact.
+- LED duration is a software timer target; physical waveform remains unmeasured.
+
+
+## Normally-off HID LED revision
+
+- Active HID entry lights the LED for 2 seconds, followed by idle off.
+- Each subsequent debounced physical press lights it for 30 ms, then off.
+- Entry indication takes priority over press feedback without blocking typing;
+  USB resume/reconfiguration restarts it. Boot hold/write-wait patterns retained.
+- Eight C suites and six Python tests passed, including both duration boundaries,
+  startup priority, lifecycle reset, and timer wrap.
+- Build: 9,519 flash bytes / 14,336; 389 application XRAM bytes / 876.
+- HEX SHA-256: `e7699e02404883d993054a9ebe61ae6ce0badbfe94b544e6bec63ef76e48584c`.
+- Flashed CH552 BE-A2-CA-BE via normal-mode host upload at 08:32:15 UTC,
+  September 12, 2026; `Verify OK`. Post-reset configuration reads succeeded;
+  original text/count/interval settings remained intact.
+- Physical LED polarity/appearance and durations have not been instrumented.

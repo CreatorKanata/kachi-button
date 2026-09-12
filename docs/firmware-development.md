@@ -36,7 +36,8 @@ python3 firmware/configure.py get
 ```
 
 `NORMAL / HOLDING` means the firmware has not latched write-wait. The normal LED
-is on; a startup candidate blinks slowly. `WRITE_WAIT (no timeout)` means the
+lights for 2 seconds on HID entry, then stays off until a key causes a 30 ms
+on pulse; a startup candidate blinks slowly. `WRITE_WAIT (no timeout)` means the
 application is waiting indefinitely with fast blinking. Both retain the same
 keyboard USB identity. An unresponsive device is not evidence of native ISP;
 use `wchisp info --chip CH552` to identify an already connected bootloader.
@@ -111,7 +112,7 @@ python3 firmware/build.py --data "$ARDUINO_DIRECTORIES_DATA" --test-only
 
 The full build runs the same tests before compiling the CH552 target. Review its
 flash/XRAM summary and retain the HEX, map and memory report. Current measured
-sizes and SHA-256 are in [bring-up.md](../firmware/bring-up.md#physical-key-led-feedback-revision).
+sizes and SHA-256 are in [bring-up.md](../firmware/bring-up.md#normally-off-hid-led-revision).
 
 For an intentional hardware regression test, first record all existing settings.
 Use a harmless probe text/count/interval, explicitly save, then verify it after

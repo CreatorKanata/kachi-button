@@ -33,7 +33,7 @@ Defaults apply only if no valid saved record is present.
 | Save interruption handling | Invalid/incomplete record loads defaults; prior record is not guaranteed retained | Native failure injection at every changed-byte write |
 | Host-only firmware update | Protocol v2 can request native ISP from normal mode or write-wait | Normal-mode request, flash and verify succeeded on hardware |
 | Unlimited write-wait | Startup three-key 2-second hold latches fast blinking until power/reset or upload | Native one-hour simulation; more than 80 seconds observed by USB state |
-| Press feedback LED | One 10 ms off pulse for each debounced physical press in normal mode | Native tests; firmware flashed; waveform not measured |
+| Press feedback LED | Idle off; 2 s on at HID entry, then 30 ms on per debounced physical press | Native tests; firmware flashed; waveform not measured |
 | Lifecycle handling | USB reset/suspend cancels pending text and staged edit; held keys require release | Code and portable cancellation tests; full power testing pending |
 | macOS library guard | Reject libusb below 1.0.30 to avoid the observed detach/exit deadlock | Regression test and successful uploads with 1.0.30 |
 
@@ -41,8 +41,9 @@ Defaults apply only if no valid saved record is present.
 
 | State | LED | Key input |
 | --- | --- | --- |
-| Normal, configured USB | Steady on | Enabled |
-| Physical press in normal mode | Off for 10 ms, then on | Normal macro rules apply |
+| Entering active HID mode | On for 2 seconds, then off | Enabled |
+| Normal, configured USB after entry | Off | Enabled |
+| Physical press in normal mode | On for 30 ms, then off | Normal macro rules apply |
 | Startup three-key hold | 250 ms on / 250 ms off | Suppressed |
 | Confirmed write-wait | 75 ms on / 75 ms off, no timeout | Suppressed |
 | Unconfigured/suspended normal mode | Off | Suppressed |
@@ -50,8 +51,10 @@ Defaults apply only if no valid saved record is present.
 
 Press feedback includes presses discarded because a macro is busy. A held key
 and software repetitions do not cause extra pulses. Simultaneous physical edges
-share one pulse; an overlapping new edge restarts its 10 ms window. Startup and
-write-wait patterns take priority. Durations are firmware timer targets subject
+share one pulse; an overlapping new edge restarts its 30 ms window. Startup and
+write-wait patterns take priority. The 2-second HID entry indication also takes
+priority over key pulses; presses do not extend it. Resume/reconfiguration
+starts a fresh entry indication. Durations are firmware timer targets subject
 to main-loop and interrupt latency.
 
 ## Persistence and timing boundaries
@@ -77,7 +80,7 @@ incomplete or invalid records. Hardware power-cut testing remains outstanding.
 
 ## Current release evidence
 
-Latest flashed LED-feedback build: 9,425 / 14,336 flash bytes and 389 / 876
+Latest flashed normally-off HID LED build: 9,519 / 14,336 flash bytes and 389 / 876
 application XRAM bytes. Eight C suites and six Python tests passed. The hardware
 record identifies target, timestamps, image hashes, settings retention and
 remaining physical checks. See [bring-up.md](../firmware/bring-up.md) for evidence

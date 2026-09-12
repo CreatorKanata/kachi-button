@@ -103,8 +103,11 @@ then keep holding for 2 seconds. Slow blinking (250 ms on/off) changes to fast
 blinking (75 ms on/off). After confirmation, release the keys and wait indefinitely.
 USB reset/suspend and key changes do not clear confirmed waiting; power/MCU reset
 does. Text output is suppressed in this state. Reconnect without keys for normal
-operation. Normal mode lights the LED while USB is configured and active.
-Each debounced physical press produces one 10 ms off pulse, then steady on.
+operation. Entering active normal HID mode lights the LED for 2 seconds, then
+leaves it off. Each debounced physical press then produces one 30 ms on pulse
+and returns to off. The entry indication takes priority during its 2 seconds;
+presses still type normally but do not interrupt or extend that indication.
+Reconfiguration or resume starts a new entry indication.
 This includes presses ignored during a running macro; holding a key does not
 repeat the pulse. Software-generated repetitions do not trigger extra pulses.
 The nonblocking pulse timer yields to startup/write-wait patterns and USB suspend.
