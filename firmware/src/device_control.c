@@ -2,6 +2,7 @@
 #include "transport.h"
 #include "boot_command.h"
 #include "settings.h"
+#include "chip_id.h"
 #ifdef __SDCC
 #pragma nooverlay
 #endif
@@ -28,6 +29,11 @@ uint8_t KachiControlSetup(void) {
         UsbSetupBuf->wValueH != (BOOT_COMMAND_MAGIC >> 8) || UsbSetupBuf->wLengthH)
         return 0xff;
     if (UsbSetupBuf->bRequestType == 0xc0) {
+        if (request == CHIP_ID_REQUEST && !index && length == 8) {
+            Ep0Buffer[0] = 'K'; Ep0Buffer[1] = 'I'; Ep0Buffer[2] = 1;
+            chip_id_read(Ep0Buffer + 3);
+            return 8;
+        }
         if (request == CONFIG_INFO_REQUEST && !index && length == 8) {
             Ep0Buffer[0] = 'K'; Ep0Buffer[1] = 'C'; Ep0Buffer[2] = 2;
             Ep0Buffer[3] = MAX_TEXT_LENGTH; Ep0Buffer[4] = MAX_REPEAT;

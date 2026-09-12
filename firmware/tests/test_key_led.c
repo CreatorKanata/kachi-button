@@ -22,6 +22,32 @@ int main(void) {
     assert(!key_led_on(0, (uint16_t)(65000u + HID_START_LED_MS)));
     assert(key_led_on(7, 4000));
     assert(!key_led_on(0, 4000 + KEY_LED_PULSE_MS));
-    puts("PASS: HID entry 2000 ms, idle off, key-on 30 ms, priority, reset, timer wrap");
+    key_led_save_finished(1, 5000);
+    assert(key_led_on(0, 5000));
+    assert(key_led_on(1, 5500)); /* Typing cannot shorten or extend save feedback. */
+    assert(key_led_on(0, 5000 + SAVE_LED_MS - 1));
+    assert(!key_led_on(0, 5000 + SAVE_LED_MS));
+    assert(!key_led_on(0, 5000)); /* No phantom flash on timer wrap. */
+    key_led_save_finished(0, 7000);
+    assert(!key_led_on(0, 7000)); /* Failed save stays off. */
+    key_led_save_finished(1, 8000);
+    key_led_save_finished(1, 8500);
+    assert(key_led_on(0, 8500 + SAVE_LED_MS - 1));
+    assert(!key_led_on(0, 8500 + SAVE_LED_MS));
+    key_led_save_finished(1, 65530);
+    assert(key_led_on(0, (uint16_t)(65530u + SAVE_LED_MS - 1)));
+    assert(!key_led_on(0, (uint16_t)(65530u + SAVE_LED_MS)));
+    key_led_reset();
+    assert(key_led_on(0, 100));
+    key_led_save_finished(1, 200); /* Save completion supersedes HID entry. */
+    assert(!key_led_on(0, 200 + SAVE_LED_MS));
+    assert(key_led_on(1, 2000)); /* Normal 30 ms feedback resumes. */
+    assert(!key_led_on(0, 2000 + KEY_LED_PULSE_MS));
+    key_led_save_finished(1, 3000);
+    key_led_reset(); /* USB lifecycle cancels pending save feedback. */
+    assert(key_led_on(0, 4000));
+    assert(key_led_on(0, 4000 + HID_START_LED_MS - 1));
+    assert(!key_led_on(0, 4000 + HID_START_LED_MS));
+    puts("PASS: HID entry 2000 ms, idle off, key-on 30 ms, save-on 1000 ms, failure, priority, reset, timer wrap");
     return 0;
 }

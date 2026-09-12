@@ -1,0 +1,50 @@
+<!doctype html>
+<!-- Browser settings form: edit physical keys directly through Chrome WebUSB. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kachi Button — Settings</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js" defer></script>
+  <script src="protocol.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+<main>
+  <header><span class="eyebrow">KACHI BUTTON</span><h1>Keyboard settings</h1>
+    <p>Choose what each button types with one press.</p></header>
+  <section class="connection" aria-label="Device connection">
+    <div><strong id="connection">Not connected</strong><p id="saved">Read your device to begin.</p>
+      <p>Chip ID: <code id="chip-id">—</code></p></div>
+    <div class="actions"><button id="connect" type="button">Connect USB</button>
+    <button id="read" type="button" disabled>Read device</button></div>
+  </section>
+  <form id="settings">
+    <fieldset id="keys" disabled>
+      <legend>Key assignments</legend>
+      <div class="key"><h2><small>Top</small>Go Go!<small>ID 0</small></h2>
+        <label>Text<input id="text0" name="text0" aria-label="Go Go! text" autocomplete="off" spellcheck="false"></label>
+        <label>Repetitions<input id="repeat0" aria-label="Go Go! repetitions" type="number" step="1" required></label>
+        <label>Interval (ms)<input id="interval0" aria-label="Go Go! interval (ms)" type="number" step="1" required></label></div>
+      <div class="key"><h2><small>Lower left</small>Hi!<small>ID 1</small></h2>
+        <label>Text<input id="text1" name="text1" aria-label="Hi! text" autocomplete="off" spellcheck="false"></label>
+        <label>Repetitions<input id="repeat1" aria-label="Hi! repetitions" type="number" step="1" required></label>
+        <label>Interval (ms)<input id="interval1" aria-label="Hi! interval (ms)" type="number" step="1" required></label></div>
+      <div class="key"><h2><small>Lower right</small>Thx<small>ID 2</small></h2>
+        <label>Text<input id="text2" name="text2" aria-label="Thx text" autocomplete="off" spellcheck="false"></label>
+        <label>Repetitions<input id="repeat2" aria-label="Thx repetitions" type="number" step="1" required></label>
+        <label>Interval (ms)<input id="interval2" aria-label="Thx interval (ms)" type="number" step="1" required></label></div>
+      <p class="hint">Text: up to 32 printable ASCII characters. Empty text disables a key.<br>
+        Repetitions: 1–99. Interval: 0–60,000 ms between copies of the full text.</p>
+      <div class="actions"><button class="primary" id="save" type="submit">Apply &amp; save to device</button>
+        <button id="temporary" type="button">Apply temporarily</button></div>
+      <p class="hint">Saved settings survive reconnecting. Temporary settings last until reset.</p>
+    </fieldset>
+  </form>
+  <p id="message" role="status" aria-live="polite">Starting…</p>
+  <label class="test">Try your buttons<textarea aria-label="Try your buttons" placeholder="Click here, then press a physical button." rows="3" spellcheck="false"></textarea></label>
+  <footer>Use a US / ABC input source. No Enter is added. Keep only one settings tool open.</footer>
+</main>
+</body>
+</html>

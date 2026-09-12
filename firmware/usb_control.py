@@ -19,6 +19,11 @@ def require_libusb_version(version, platform):
                            'set KACHI_LIBUSB or --libusb to the newer library')
 
 
+def require_identity(product, manufacturer):
+    if product != config.USB_PRODUCT or manufacturer not in config.USB_MANUFACTURERS:
+        raise RuntimeError('USB identity does not match Kachi Button')
+
+
 class Descriptor(C.Structure):
     _fields_ = [(name, typ) for name, typ in (
         ('length', C.c_uint8), ('type', C.c_uint8), ('usb', C.c_uint16),
@@ -81,12 +86,12 @@ class UsbControl:
                 raise RuntimeError(f'Expected one Kachi target and no ISP targets; found {len(matches)} / {isp}')
             device, desc = matches[0]
             self.check(self.lib.libusb_open(device, C.byref(self.handle)))
-            for index, expected in ((desc.product, config.USB_PRODUCT),
-                                    (desc.manufacturer, config.USB_MANUFACTURER)):
+            identity = []
+            for index in (desc.product, desc.manufacturer):
                 buf = C.create_string_buffer(256)
                 n = self.check(self.lib.libusb_get_string_descriptor_ascii(self.handle, index, buf, len(buf)))
-                if buf.raw[:n].decode('ascii') != expected:
-                    raise RuntimeError('USB identity does not match Kachi Button')
+                identity.append(buf.raw[:n].decode('ascii'))
+            require_identity(*identity)
         finally:
             self.lib.libusb_free_device_list(devices, 1)
 

@@ -5,11 +5,18 @@ import unittest
 from unittest.mock import Mock, patch
 
 import config
-from usb_control import require_libusb_version
+from usb_control import require_libusb_version, require_identity
 from flash import require_uploadable, upload
 
 
 class FlashTests(unittest.TestCase):
+    def test_manufacturer_migration_keeps_identity_checks(self):
+        require_identity('Kachi Button', 'HAPT Lab, LLC')
+        require_identity('Kachi Button', 'CreatorKanata')
+        for product, manufacturer in [('Other', 'HAPT Lab, LLC'), ('Kachi Button', 'Other')]:
+            with self.assertRaises(RuntimeError):
+                require_identity(product, manufacturer)
+
     def test_reject_macos_hotplug_deadlock_dependency(self):
         with self.assertRaises(RuntimeError):
             require_libusb_version((1, 0, 29), 'darwin')

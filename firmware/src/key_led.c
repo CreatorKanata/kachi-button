@@ -1,12 +1,25 @@
-/* Indicate HID entry for 2 s, then pulse on for presses; no blocking delays. */
+/* Nonblocking HID entry, verified-save indication, and physical key feedback. */
 #include "key_led.h"
-enum { IDLE, START_PENDING, START_LIT, KEY_LIT };
+enum { IDLE, START_PENDING, START_LIT, KEY_LIT, SAVE_LIT };
 static uint8_t state;
 static uint16_t started_at;
 
 void key_led_reset(void) { state = START_PENDING; }
 
+void key_led_save_finished(uint8_t ok, uint16_t now) {
+    /* Failed writes never trigger success feedback; another success restarts it. */
+    if (ok) {
+        state = SAVE_LIT;
+        started_at = now;
+    }
+}
+
 uint8_t key_led_on(uint8_t pressed_edges, uint16_t now) {
+    if (state == SAVE_LIT) {
+        /* Save completion overrides entry/key pulses without blocking typing. */
+        if ((uint16_t)(now - started_at) < SAVE_LED_MS) return 1;
+        state = IDLE;
+    }
     if (state == START_PENDING) {
         state = START_LIT;
         started_at = now;

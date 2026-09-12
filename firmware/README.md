@@ -33,8 +33,8 @@ USB reset or suspend cancels the current macro and staged configuration edit.
 
 ## Configure from the host
 
-Python 3 and a libusb shared library are required (on macOS, 1.0.30 or newer). No CDC serial port or
-browser UI is included. These commands use vendor requests on the keyboard's
+Python 3 and a libusb shared library are required (on macOS, 1.0.30 or newer). The [server-free browser settings page](../configure-html/README.md) uses Chrome WebUSB instead
+of these Python tools. No CDC serial port is included. These commands use vendor requests on the keyboard's
 USB control endpoint without claiming/detaching its HID interface.
 
 ```sh
@@ -188,6 +188,7 @@ A new SETUP cancels an unacknowledged command. Invalid requests stall.
 | `0x63` | OUT / 0 | byte value high, offset low | Append next sequential byte, 0–35 |
 | `0x64` | OUT / 0 | 0 | Validate and atomically apply the complete staged macro |
 | `0x65` | OUT / 0 | 0 | Queue save, poll info for completion |
+| `0x66` | IN / 8 | 0 | Factory ID: `KI`, format 1, five ID bytes, most significant first |
 
 Save result: 0 success, 1 pending, 2 storage error. Edits and ISP entry stall
 while saving; read-only requests remain available. Repeating an edit must start
@@ -205,3 +206,32 @@ See [bring-up.md](bring-up.md) for build sizes and actual hardware checks.
 
 Dismiss macOS Keyboard Setup Assistant with Quit; three keys cannot complete its
 full-keyboard identification procedure.
+
+## Save-completion LED
+
+Firmware with the September 13, 2026 save-feedback change lights the LED for
+1 second after a successful, verified settings save in normal HID mode. This
+also applies to an unchanged save and saves from the Python tool. Temporary
+apply and failed saves do not trigger it. This device-side change requires a
+firmware update; changing the HTML alone cannot enable it on older firmware.
+
+Save feedback takes priority over HID-entry and key-press indications; typing
+continues and presses do not extend the 1-second duration. Another successful
+save restarts it. Startup/write-wait blinking, USB suspend/reset, and ISP entry
+retain priority and can cancel the indication. Native tests verify timer bounds,
+wrap, failure, retrigger, and priority; physical LED timing is not measured.
+
+The optional `0x66` request reads the factory 40-bit CH552 ID without ISP entry
+or flash writes. It is available in normal and write-wait modes and during save.
+Older protocol-v2 firmware stalls it; callers may show ID unavailable while
+continuing settings operations. The USB serial-number descriptor remains absent.
+See the [browser ID guide](../configure-html/README.md#factory-chip-id) for memory
+addresses and the datasheet reference.
+
+## USB manufacturer
+
+New firmware advertises `HAPT Lab, LLC` as its USB manufacturer. The product
+remains `Kachi Button`. Host tools and the browser accept both this name and
+legacy `CreatorKanata` devices so existing firmware can still be upgraded.
+Product/VID/PID and protocol checks remain in place; other manufacturers are
+not accepted. Historical bring-up records retain the names observed at the time.

@@ -7,6 +7,11 @@
 uint8_t Ep0Buffer[8];
 volatile uint8_t kachi_waiting, kachi_boot_requested;
 void fake_reset(void);
+uint8_t chip_id_read_code(uint16_t address) {
+    static const uint8_t memory[] = {0x12, 0xee, 0x9a, 0x78, 0x56, 0x34};
+    assert(address >= 0x3ffa && address <= 0x3fff && address != 0x3ffb);
+    return memory[address - 0x3ffa];
+}
 
 static uint8_t setup(uint8_t type, uint8_t request, uint16_t index, uint8_t length) {
     KachiControlCancel();
@@ -48,6 +53,17 @@ int main(void) {
     assert(setup(0x40,BOOT_ENTER_REQUEST,0,0)==0xff);
     assert(setup(0x40,CONFIG_BEGIN_REQUEST,0,0)==0xff);
     assert(setup(0xc0,CONFIG_INFO_REQUEST,0,8)==8 && Ep0Buffer[6]==1);
+    assert(setup(0xc0,CHIP_ID_REQUEST,0,8)==8);
+    assert(!memcmp(Ep0Buffer,"KI\x01\x12\x34\x56\x78\x9a",8));
+    assert(setup(0xc0,CHIP_ID_REQUEST,1,8)==0xff);
+    assert(setup(0xc0,CHIP_ID_REQUEST,0,7)==0xff);
+    assert(setup(0x40,CHIP_ID_REQUEST,0,0)==0xff);
+    setup(0xc0,CHIP_ID_REQUEST,0,7);
+    Ep0Buffer[6]=8; Ep0Buffer[7]=1;
+    assert(KachiControlSetup()==0xff);
+    setup(0xc0,CHIP_ID_REQUEST,0,7);
+    Ep0Buffer[2]=0; Ep0Buffer[6]=8;
+    assert(KachiControlSetup()==0xff);
     puts("PASS: EP0 shared buffer, ACK gating, remote ISP, config packets, save exclusion");
     return 0;
 }

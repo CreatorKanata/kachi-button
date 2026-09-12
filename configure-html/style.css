@@ -1,0 +1,36 @@
+/* Quiet, responsive layout for three keys and explicit device persistence. */
+:root { font: 15px/1.5 system-ui, sans-serif; color: #192b29; background: #f5f7f5; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { max-width: 850px; margin: 48px auto; padding: 0 24px; }
+.eyebrow { font-size: 12px; font-weight: 750; letter-spacing: .14em; color: #34736a; }
+h1 { margin: 6px 0; font-size: 32px; letter-spacing: -.04em; }
+header p, .hint, footer, #saved { color: #5d6d69; }
+header p { margin: 0 0 26px; }
+.connection { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px; border: 1px solid #d4ddd7; border-radius: 12px; background: white; }
+#saved { margin: 3px 0 0; font-size: 13px; }
+fieldset { border: 0; margin: 26px 0 0; padding: 0; }
+legend { font-weight: 650; margin-bottom: 12px; }
+.key { display: grid; grid-template-columns: 125px 1fr 120px 135px; gap: 14px; align-items: center; padding: 18px; background: white; border: 1px solid #dce3de; border-radius: 10px; margin-bottom: 10px; }
+h2 { margin: 0; font-size: 15px; }
+small { display: block; font-weight: 400; color: #687974; font-size: 12px; }
+label { display: block; font-size: 12px; font-weight: 600; }
+input, textarea { display: block; width: 100%; border: 1px solid #b9c8c0; border-radius: 6px; padding: 10px; margin-top: 5px; font: inherit; font-size: 15px; color: inherit; background: white; }
+input:focus, textarea:focus, button:focus-visible { outline: 3px solid #8ac9b5; outline-offset: 2px; }
+button { cursor: pointer; border: 1px solid #bacac2; border-radius: 7px; padding: 10px 15px; background: white; color: inherit; font: inherit; font-weight: 600; }
+button:hover { background: #eaf2ed; }
+button.primary { color: white; background: #246656; border-color: #246656; }
+button.primary:hover { background: #194f42; }
+button:disabled, fieldset:disabled { opacity: .55; cursor: default; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.hint, footer { font-size: 12px; }
+#message { min-height: 24px; font-size: 14px; color: #246656; }
+#message.error { color: #a52d2d; }
+.test { margin-top: 24px; }
+footer { margin-top: 18px; }
+@media (max-width: 700px) {
+  main { margin: 24px auto; padding: 0 16px; }
+  .key { grid-template-columns: 1fr 1fr; }
+  .key h2, .key label:first-of-type { grid-column: 1 / -1; }
+  .connection { align-items: start; flex-direction: column; }
+}

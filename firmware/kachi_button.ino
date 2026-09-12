@@ -39,8 +39,13 @@ void loop(void) {
     uint8_t action;
     uint8_t boot = boot_gesture_poll(pressed, now);
     /* Save runs outside the USB ISR; EEPROM writes mask interrupts per byte. */
-    if (settings_saving)
-        settings_finish_save(storage_save());
+    if (settings_saving) {
+        uint8_t ok = storage_save();
+        /* EEPROM work takes time: start feedback at completion, not loop entry. */
+        now = (uint16_t)millis();
+        key_led_save_finished(ok, now);
+        settings_finish_save(ok);
+    }
     if (kachi_boot_requested) {
         digitalWrite(LED_PIN, HIGH);
         enter_bootloader();

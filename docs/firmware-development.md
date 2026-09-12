@@ -44,6 +44,10 @@ use `wchisp info --chip CH552` to identify an already connected bootloader.
 
 ## Change text, count, and interval
 
+For a server-free UI, open `configure-html/index.html` in Chrome and choose
+**Connect USB**. See the [browser settings guide](../configure-html/README.md) for
+USB permission, save behavior, compatibility, and validation status.
+
 ```sh
 python3 firmware/configure.py set 0 --text 'Go!' --repeat 3 --interval-ms 250 --save
 python3 firmware/configure.py get

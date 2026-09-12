@@ -93,7 +93,7 @@ def main():
         'settings': ['src/settings.c', 'src/storage.c', 'tests/fake_nv.c'],
         'boot_gesture': ['src/boot_gesture.c'],
         'boot_command': ['src/boot_command.c'],
-        'device_control': ['src/device_control.c', 'src/boot_command.c',
+        'device_control': ['src/device_control.c', 'src/chip_id.c', 'src/boot_command.c',
                            'src/settings.c', 'src/storage.c', 'tests/fake_nv.c'],
     }
     for name, sources in suites.items():

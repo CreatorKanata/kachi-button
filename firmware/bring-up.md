@@ -144,3 +144,47 @@ Each press sends exactly the text without Enter or a trailing separator.
   September 12, 2026; `Verify OK`. Post-reset configuration reads succeeded;
   original text/count/interval settings remained intact.
 - Physical LED polarity/appearance and durations have not been instrumented.
+
+
+## Save-completion LED revision
+
+- A verified settings save in normal HID mode lights the LED for 1 second.
+  Temporary apply and failed saves do not trigger success feedback.
+- Eight C suites and six Python tests passed; timing tests include wrap, failure,
+  repeated saves, key/entry priority, and lifecycle reset.
+- Build: 9,609 / 14,336 flash bytes; 394 / 876 application XRAM bytes.
+- HEX SHA-256: `7c758311f587bace7bd079b28a5f24cb3a178d07c1341a0a2a14b589611ddb01`.
+- Flashed CH552 BE-A2-CA-BE through normal-mode remote ISP; `Verify OK` at
+  18:42:12 UTC September 12, 2026 (September 13 JST).
+- Post-reset unchanged save completed with result 0, saving false, unsaved false.
+  Go Go! / Hi! / Thx, repeat 1, interval 0 ms remained intact.
+- Browser save interaction and physical LED duration were not observed in this
+  test; the host tool exercised the same firmware save command.
+
+
+## Factory chip ID revision
+
+- Added optional read-only request 0x66: KI, format 1, 40-bit ID (MSB first).
+- Eight native C suites, six Python tests, and eight browser protocol tests passed.
+- Build: 9,753 / 14,336 flash bytes; 397 / 876 application XRAM bytes.
+- HEX SHA-256: `41e0231dd8898f3ff388bb77b562c7fec474094cf40df290d899522911c38e1e`.
+- Flashed CH552 BE-A2-CA-BE; Verify OK at 18:47:30 UTC September 12, 2026
+  (September 13 JST). Normal-mode reads returned factory ID `79-BE-CA-A2-BE`
+  twice. The lower four bytes, reversed, match the ISP UID BE-A2-CA-BE.
+- Go Go! / Hi! / Thx, count 1, interval 0 remained saved after reset.
+- Host USB verified the same new request used by Read device; actual browser
+  rendering/interaction remains unverified due to the earlier automation restriction.
+
+
+## USB manufacturer revision
+
+- New USB manufacturer: `HAPT Lab, LLC`; product remains `Kachi Button`.
+- Host tools and HTML accept the former `CreatorKanata` identity for upgrades.
+  Other manufacturers remain rejected.
+- Eight C suites, seven Python tests, and nine browser protocol tests passed.
+- Build: 9,753 / 14,336 flash bytes; 397 / 876 application XRAM bytes.
+- HEX SHA-256: `6ea7d1b452e13cd46a855ca137f394a4a315296f22dea3562baf91eca48ac550`.
+- Flashed with Verify OK at 19:04:09 UTC September 12, 2026 (September 13 JST).
+- Read the actual USB manufacturer descriptor after reset: `HAPT Lab, LLC`.
+  Factory ID remains `79-BE-CA-A2-BE`. Saved Go Go!!! / Hi! / Thx, count 1,
+  interval 0 ms remained intact, with no unsaved settings.
