@@ -20,7 +20,7 @@ See the [top and bottom board previews](pcb/v1/README.md#board-previews) for rou
 
 Manufacturing exports are available in [pcb/v1](pcb/v1/README.md), including Gerber, BOM, pick-and-place, and STEP files. The design record explains the circuit, component choices, layout, and outstanding validation.
 
-USB keyboard firmware and a browser-based configuration tool are planned. This release records the hardware design and manufacturing exports; it does not establish successful hardware bring-up, firmware operation, or enclosure fit.
+The first [USB keyboard firmware](firmware/README.md) maps the upper, lower-left, and lower-right keys to `Go Go!`, `Hi!`, and `Thx`. See the [bring-up record](firmware/bring-up.md) for build and hardware verification. A browser-based configuration tool remains planned; enclosure fit and broader hardware validation remain separate checks.
 
 ## Development
 

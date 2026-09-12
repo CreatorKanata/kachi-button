@@ -1,0 +1,3 @@
+# Local build products; source and release evidence remain reviewable.
+/build/
+__pycache__/

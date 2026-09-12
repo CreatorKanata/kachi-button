@@ -1,6 +1,6 @@
 # Firmware and Configuration Specification
 
-Status: required behavior and proposed implementation baseline, September 6, 2026. Firmware and the configuration website have not been implemented or validated in this hardware release. See [product requirements](product-spec.md) and [the PCB pin map](pcb-spec.md).
+Status: configurable-release requirements and proposed baseline, September 6, 2026. The September 12 [fixed-text bring-up firmware](../../firmware/README.md) implements a keyboard-only subset; see its [validation record](../../firmware/bring-up.md). The configuration website and persistence remain unimplemented. See [product requirements](product-spec.md) and [the PCB pin map](pcb-spec.md).
 
 ## Platform and build
 
