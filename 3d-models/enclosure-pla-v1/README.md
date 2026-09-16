@@ -2,7 +2,20 @@
 
 Created September 6, 2026 from the user's current Fusion `asm` placement. This is a printable prototype, not a physically validated enclosure release.
 
-## Editable source and exports
+## Current STL exports (September 16, 2026)
+
+The current printable enclosure is provided as separate files:
+
+- [Top STL](KachiButton-Enclosure-PLA-v1-Top.stl)
+- [Bottom STL](KachiButton-Enclosure-PLA-v1-Bottom.stl)
+
+These replace the combined `KachiButton-Enclosure-PLA-v1.3mf` export. The original September 6 descriptions and subsequent design notes below are historical snapshots; use the current STL geometry for this revision.
+
+The STL files retain the assembly orientation: Y is the height axis. Their bounding dimensions in file X/Y/Z are 71.2921 × 12.6 × 47.2 mm for Top, including the keyring ear, and 63.3 × 6.7 × 47.2 mm for Bottom. STL does not encode units; import as millimeters and choose the print orientation in the slicer.
+
+Both binary STL files passed triangle-record, finite-coordinate, nondegenerate-triangle, and closed-edge checks. These checks establish mesh integrity, not physical fit or strength.
+
+## Initial editable source and exports
 
 The Fusion file is `KachiButton-Enclosure-PLA-v1`, saved in HAPT Lab / `kachi-button` (file ID `urn:adsk.wipprod:dm.lineage:ralD4T5OSdiXAXDjQ-ULcw`). It contains the reference assembly plus separate `Enclosure Top` and `Enclosure Bottom` components. Named sketches, extrusions, lofts, and fillets remain editable in the timeline; the outline sketches are not fully dimension-constrained.
 
