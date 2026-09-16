@@ -6,9 +6,9 @@
 
 Kachi Button is a tiny programmable USB keyboard designed to turn your favorite words and shortcuts into physical buttons. “Kachi” is the Japanese sound of a click.
 
-![Kachi Button product reference](images/kachi-button-product2.png)
+![Kachi Button with the PLA v2 enclosure](images/enclosure/KachiButton-Enclosure-PLA-v2.png)
 
-The product concept combines three mechanical keys, a USB-C connection, and a compact enclosure. Use cases include quick game chat messages and recurring prompts such as “OK,” “Continue,” and “Do it.” The image above is a design reference, not a photograph of a validated production unit.
+The product concept combines three mechanical keys, a USB-C connection, and a compact enclosure. Use cases include quick game chat messages and recurring prompts such as “OK,” “Continue,” and “Do it.” The image above is a 3D rendering of the PLA v2 enclosure and keycaps.
 
 ## Hardware v1
 
