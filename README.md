@@ -2,9 +2,9 @@
   <img src="images/logo/kachi-button-text-white-background.png" alt="Kachi Button" width="480">
 </p>
 
-<p align="center"><strong>Click once. Type the whole thing.</strong></p>
+<p align="center"><strong>Click for Fun. Type for Real.</strong></p>
 
-Kachi Button is a tiny programmable USB keyboard designed to turn your favorite words and shortcuts into physical buttons. “Kachi” is the Japanese sound of a click.
+Kachi Button is an open-source, programmable keychain keyboard. Enjoy the click of its mechanical keys, then connect it via USB-C to type your favorite phrases with a single press. “Kachi” is the Japanese sound of a click.
 
 ![Kachi Button with the PLA v2 enclosure](images/enclosure/KachiButton-Enclosure-PLA-v2.png)
 
