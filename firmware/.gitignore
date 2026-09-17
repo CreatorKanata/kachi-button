@@ -1,3 +1,6 @@
 # Local build products; source and release evidence remain reviewable.
 /build/
 __pycache__/
+
+# Machine-specific upload tool paths.
+/local.mk

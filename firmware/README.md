@@ -81,6 +81,28 @@ runs in the foreground, with status requests available between byte operations.
 
 ## Firmware upload and waiting
 
+From the repository root, use these short commands:
+
+```sh
+make flash-first  # First flash or recovery: already connected in native WCH ISP.
+make flash        # Later updates: connected as a running Kachi Button.
+```
+
+Both commands flash the existing `firmware/build/compiled/kachi_button.ino.hex`
+with verification enabled; neither rebuilds it. Build first if the HEX is absent
+or you have changed firmware source. Override the image with
+`make flash FIRMWARE=/absolute/path/to/file.hex` (also supported by `flash-first`).
+A first-flash command does not put a running keyboard into ISP; use `make flash`
+for that. If an update reports `found 0 / 1`, the device is already in ISP:
+use `make flash-first`. Connect only the intended target.
+
+For tools outside PATH, copy `firmware/local.mk.example` to `firmware/local.mk`
+and set `PYTHON`, `WCHISP`, and optionally `LIBUSB` to their installed paths.
+The local file is ignored by Git. Values are plain paths, without shell quotes;
+spaces in paths are supported. macOS requires libusb 1.0.30+ matching Python's
+architecture. `make` shows help; `make -n flash` previews the command without USB
+access. Existing long-form commands remain available below.
+
 Protocol v2 accepts a host ISP-entry command from normal mode or write-wait mode.
 An AI/host tool can now update firmware without a physical key gesture:
 

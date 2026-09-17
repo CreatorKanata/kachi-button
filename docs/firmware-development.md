@@ -1,6 +1,6 @@
 # Keyboard firmware development
 
-Operational guide for CH552E PCB v1, updated September 12, 2026.
+Operational guide for CH552E PCB v1, updated September 17, 2026.
 Commands below run from the repository root. See the [feature inventory](firmware-features.md)
 for current behavior and [internals](firmware-internals.md) for the implementation.
 
@@ -27,6 +27,35 @@ Use a libusb library matching the Python process architecture. The host tools
 reject macOS libusb older than 1.0.30 before opening USB: 1.0.29 deadlocked during
 the observed detach/exit sequence. See the [hardware record](../firmware/bring-up.md).
 Changing the library path does not require changing or reflashing device firmware.
+
+## Short upload commands
+
+From the repository root:
+
+```sh
+make flash-first  # Blank board or recovery: already in native WCH ISP.
+make flash        # Normal application or write-wait: request ISP, then flash.
+```
+
+Configure tool paths once by copying `firmware/local.mk.example` to
+`firmware/local.mk` and editing `PYTHON`, `WCHISP`, and `LIBUSB`. The latter is
+optional and defaults to `KACHI_LIBUSB` or system discovery. This ignored file
+keeps machine-specific paths out of the repository. Use plain paths without
+shell quotes, including when a path contains spaces.
+
+Both commands use `firmware/build/compiled/kachi_button.ino.hex`; build it first
+or supply `FIRMWARE=/absolute/path/to/file.hex`. Upload does not rebuild firmware.
+`make -n flash-first` and `make -n flash` show commands without running them.
+`make` alone only displays help. Native ISP and normal-mode uploads retain
+wchisp verification and reset. The normal-mode path also retains the existing
+protocol, identity, and single-target checks in `flash.py`.
+
+The Make command tests use fake executables, so they never reset or flash USB
+hardware. Run them with the other host tests:
+
+```sh
+PYTHONPATH=firmware python3 -m unittest discover -s firmware/tests -p 'test_*.py'
+```
 
 ## Inspect before editing
 
@@ -131,7 +160,7 @@ are separate from portable tests; record exactly which observations were made.
 | libusb version rejected or detach hangs | Select libusb 1.0.30+ via `KACHI_LIBUSB`; do not repeatedly flash with the affected library |
 | `dlopen` architecture mismatch | Match library architecture to Python; Apple Silicon can also run x86_64 Python |
 | No matching target / multiple targets | Connect only the intended Kachi Button; inspect USB identity before retrying |
-| Target is already WCH ISP | Use native `wchisp flash` directly; the application control endpoint is absent |
+| Target is already WCH ISP (`found 0 / 1`) | Run `make flash-first`; the application control endpoint is absent |
 | Old firmware refuses normal-mode entry | Use the three-key gesture for the one-time v2 upgrade |
 | Fast blink but `wchisp` sees nothing | Expected during application wait; use `firmware/flash.py` to request native ISP |
 | Save reports an error | Read state again; do not assume settings persisted until save completes successfully |

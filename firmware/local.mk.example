@@ -1,0 +1,7 @@
+# Copy to firmware/local.mk and edit paths for this computer (no shell quotes).
+PYTHON = python3
+WCHISP = wchisp
+# Optional library override; macOS requires libusb 1.0.30+ matching Python.
+# LIBUSB = /absolute/path/to/libusb-1.0.dylib
+# The default HEX is produced by firmware/build.py. Override only when needed.
+# FIRMWARE = /absolute/path/to/firmware.hex
